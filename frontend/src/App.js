@@ -13,6 +13,7 @@ import Register from '@/pages/Register';
 import AuthCallback from '@/pages/AuthCallback';
 import Dashboard from '@/pages/Dashboard';
 import AdminDashboard from '@/pages/AdminDashboard';
+import DashboardInverPulse from '@/pages/DashboardInverPulse';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import PaymentSuccess from '@/pages/PaymentSuccess';
 import Terminos from '@/pages/Terminos';
