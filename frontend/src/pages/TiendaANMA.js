@@ -255,13 +255,13 @@ function TiendaANMA() {
 
       {chatOpen && (
         <div data-testid="lucidbot-chat-container" className="fixed bottom-24 right-6 w-96 h-[500px] bg-white border border-slate-200 rounded-2xl shadow-2xl z-[100] flex flex-col">
-          <div className="bg-[#0F766E] text-white p-4 rounded-t-2xl flex items-center justify-between">
+          <div className="bg-[#0F766E] text-white p-4 rounded-t-2xl flex items-center justify-between flex-shrink-0">
             <h3 className="font-bold">LucidBot - Asistente ANMA</h3>
             <button onClick={() => setChatOpen(false)}>
               <X className="h-5 w-5" />
             </button>
           </div>
-          <div className="h-96 overflow-y-auto p-4 space-y-3">
+          <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {chatHistory.length === 0 && (
               <div className="text-slate-500 text-sm text-center py-8">
                 ¡Hola! Soy LucidBot. ¿En qué puedo ayudarte?
