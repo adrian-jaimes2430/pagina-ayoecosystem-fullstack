@@ -760,6 +760,7 @@ async def confirm_inverpulse_deposit(deposit_id: str, request: Request, current_
     
     # Verificar y actualizar nivel si corresponde
     inversor = await db.inversores_inverpulse.find_one({"inversor_id": deposit["inversor_id"]}, {"_id": 0})
+    from inverpulse_models import LevelRequirements
     new_level = await LevelRequirements.check_level_eligibility(inversor, db)
     
     if new_level != inversor["level"]:
