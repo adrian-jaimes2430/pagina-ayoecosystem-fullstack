@@ -67,30 +67,30 @@ function LandingANMA() {
           <div className="text-center mb-16">
             <h3 className="text-4xl lg:text-5xl font-bold text-[#0F172A] mb-4 tracking-tight">Cómo Funciona</h3>
             <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              Proceso simple y transparente para vender y ganar comisiones
+              Tu experiencia de compra simple y directa
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="text-center">
               <div className="w-16 h-16 bg-[#0F766E] text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
-              <h4 className="text-xl font-bold text-[#0F172A] mb-2">Regístrate</h4>
-              <p className="text-slate-600">Crea tu cuenta como impulsador ANMA y accede al catálogo completo.</p>
+              <h4 className="text-xl font-bold text-[#0F172A] mb-2">Explora</h4>
+              <p className="text-slate-600">Navega nuestro catálogo de productos trending en salud, belleza y más.</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-[#0F766E] text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
-              <h4 className="text-xl font-bold text-[#0F172A] mb-2">Promociona</h4>
-              <p className="text-slate-600">Comparte productos con tus clientes usando tu enlace único de impulsador.</p>
+              <h4 className="text-xl font-bold text-[#0F172A] mb-2">Agrega al Carrito</h4>
+              <p className="text-slate-600">Selecciona los productos que te interesan y agrégalos a tu carrito.</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-[#0F766E] text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">3</div>
-              <h4 className="text-xl font-bold text-[#0F172A] mb-2">Gestión Automática</h4>
-              <p className="text-slate-600">Nosotros nos encargamos del envío, devoluciones y soporte al cliente.</p>
+              <h4 className="text-xl font-bold text-[#0F172A] mb-2">Pago Seguro</h4>
+              <p className="text-slate-600">Realiza tu compra con métodos de pago seguros y confiables.</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-[#F59E0B] text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">4</div>
-              <h4 className="text-xl font-bold text-[#0F172A] mb-2">Recibe Comisiones</h4>
-              <p className="text-slate-600">Gana hasta 20% de comisión por cada venta confirmada.</p>
+              <h4 className="text-xl font-bold text-[#0F172A] mb-2">Recibe en Casa</h4>
+              <p className="text-slate-600">Entregamos directamente en tu puerta con seguimiento en tiempo real.</p>
             </div>
           </div>
         </div>
