@@ -43,13 +43,13 @@ function LandingANMA() {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/anma/tienda">
                   <Button data-testid="anma-hero-cta-tienda" size="lg" className="bg-[#0F766E] hover:bg-[#0D5F58] text-white rounded-lg px-8 py-6 text-lg font-semibold shadow-lg">
-                    Ver Productos
+                    Explorar Productos
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
                 <Link to="/register">
                   <Button data-testid="anma-hero-cta-register" size="lg" variant="outline" className="rounded-lg px-8 py-6 text-lg font-semibold border-slate-300">
-                    Ser Impulsador
+                    Crear Cuenta
                   </Button>
                 </Link>
               </div>
