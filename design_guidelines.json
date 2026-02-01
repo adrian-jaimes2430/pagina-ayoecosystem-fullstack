@@ -1,0 +1,188 @@
+{
+  "design_system": {
+    "identity": {
+      "name": "A&O Ecosystem",
+      "tone": "Corporate, Institutional, Scalable, Professional",
+      "archetype": "The Architect (Structure, Vision, Stability)",
+      "theme_mode": "light"
+    },
+    "typography": {
+      "headings": {
+        "family": "Manrope, sans-serif",
+        "weights": ["600", "700", "800"],
+        "usage": "Main headings, section titles, hero text. Use tight tracking (-0.02em)."
+      },
+      "body": {
+        "family": "Inter, sans-serif",
+        "weights": ["400", "500"],
+        "usage": "Paragraphs, UI labels, form inputs."
+      },
+      "data": {
+        "family": "Space Grotesk, monospace",
+        "weights": ["500"],
+        "usage": "Dashboard metrics, prices, statistics, tables."
+      }
+    },
+    "colors": {
+      "palette": {
+        "primary_ao": {
+          "name": "Corporate Navy",
+          "hex": "#0F172A",
+          "usage": "A&O Brand Primary, Headings, Footer"
+        },
+        "secondary_ao": {
+          "name": "Slate Grey",
+          "hex": "#64748B",
+          "usage": "Subtext, Borders, Neutral Backgrounds"
+        },
+        "primary_anma": {
+          "name": "Growth Teal",
+          "hex": "#0F766E",
+          "usage": "ANMA Brand Primary, CTAs, Active States"
+        },
+        "accent_anma": {
+          "name": "Impulse Amber",
+          "hex": "#F59E0B",
+          "usage": "Highlights, Notifications, Sales Metrics"
+        },
+        "background": {
+          "default": "#FFFFFF",
+          "subtle": "#F8FAFC",
+          "paper": "#FFFFFF"
+        },
+        "text": {
+          "primary": "#0F172A",
+          "secondary": "#475569",
+          "muted": "#94A3B8"
+        }
+      },
+      "gradients": {
+        "hero_overlay": "linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(15, 23, 42, 0.4) 100%)",
+        "subtle_glow": "radial-gradient(circle at 50% 50%, rgba(15, 118, 110, 0.1) 0%, transparent 70%)"
+      }
+    },
+    "spacing": {
+      "scale": "Generous (2-3x standard)",
+      "container_padding": "p-6 md:p-12 lg:p-24",
+      "section_gap": "gap-16 md:gap-32",
+      "grid_gap": "gap-8"
+    },
+    "shadows": {
+      "card": "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
+      "hover": "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05)",
+      "dropdown": "0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)"
+    },
+    "border_radius": {
+      "card": "rounded-xl",
+      "button": "rounded-lg",
+      "input": "rounded-md"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-slate-900 text-white hover:bg-slate-800 shadow-sm font-medium px-6 py-3 rounded-lg transition-all active:scale-95",
+      "secondary": "bg-white text-slate-900 border border-slate-200 hover:bg-slate-50 shadow-sm font-medium px-6 py-3 rounded-lg transition-all",
+      "ghost": "text-slate-600 hover:text-slate-900 hover:bg-slate-100 px-4 py-2 rounded-lg transition-colors"
+    },
+    "cards": {
+      "marketing": "bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow p-8 rounded-2xl",
+      "dashboard": "bg-white border border-slate-200 shadow-none p-6 rounded-xl"
+    },
+    "inputs": {
+      "default": "bg-white border-slate-200 focus:ring-2 focus:ring-slate-900 focus:border-transparent rounded-md h-11"
+    }
+  },
+  "layouts": {
+    "landing_hero": {
+      "type": "Asymmetric Split",
+      "structure": "grid grid-cols-1 lg:grid-cols-12 gap-12 items-center",
+      "left_col": "col-span-1 lg:col-span-7",
+      "right_col": "col-span-1 lg:col-span-5 relative h-[600px]"
+    },
+    "bento_grid": {
+      "type": "Mode A (Tetris)",
+      "structure": "grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-[300px]"
+    },
+    "dashboard": {
+      "type": "Sidebar + Header",
+      "structure": "flex h-screen bg-slate-50",
+      "sidebar": "w-64 border-r border-slate-200 bg-white hidden md:block",
+      "main": "flex-1 overflow-y-auto p-8"
+    }
+  },
+  "assets": {
+    "images": {
+      "hero_corporate": {
+        "url": "https://images.unsplash.com/photo-1760124056883-732e7a5e2e68?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "alt": "Modern glass skyscrapers against blue sky",
+        "usage": "A&O Landing Hero Background"
+      },
+      "team_meeting": {
+        "url": "https://images.unsplash.com/photo-1769740333462-9a63bfa914bc?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "alt": "Diverse business team meeting in conference room",
+        "usage": "About Us / Culture Section"
+      },
+      "logistics": {
+        "url": "https://images.unsplash.com/photo-1768796373360-95d80c5830fb?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "alt": "Workers moving pallets in large warehouse",
+        "usage": "ANMA Logistics / Operations Section"
+      },
+      "remote_agent": {
+        "url": "https://images.unsplash.com/photo-1743865319740-32121cae5959?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "alt": "Woman working from home on laptop",
+        "usage": "ANMA Impulsador / Join Us Section"
+      },
+      "product_skincare": {
+        "url": "https://images.unsplash.com/photo-1647507653704-bde7f2d6dbf0?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "alt": "Minimalist skincare bottle on podium",
+        "usage": "ANMA Store Product Card"
+      },
+      "product_tech": {
+        "url": "https://images.unsplash.com/photo-1764557238996-c1df265dddb6?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "alt": "Modern wireless headphones on desk",
+        "usage": "ANMA Store Product Card"
+      },
+      "product_watch": {
+        "url": "https://images.unsplash.com/photo-1762768742890-f596dcaea13e?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "alt": "Smartwatch lifestyle",
+        "usage": "ANMA Store Product Card"
+      }
+    },
+    "icons": {
+      "library": "lucide-react",
+      "style": "Stroke width 1.5px, size 20px or 24px"
+    }
+  },
+  "instructions_to_main_agent": {
+    "general": [
+      "Use 'Manrope' for all headings and 'Inter' for body text.",
+      "Implement a 'Professional Light' theme. Do not use dark mode for the public landing pages.",
+      "Use the provided image URLs for specific sections. Do not use placeholders.",
+      "Ensure all interactive elements have hover states (transform, color change).",
+      "Use 'sonner' for toast notifications.",
+      "Add 'data-testid' to all interactive elements."
+    ],
+    "landing_pages": [
+      "A&O Landing: Use the 'hero_corporate' image with a subtle overlay.",
+      "ANMA Landing: Focus on the 'remote_agent' and 'logistics' images to show the dual nature (Sales + Ops).",
+      "Use Bento Grids for feature sections (e.g., 'Why Choose Us')."
+    ],
+    "dashboards": [
+      "Use a sidebar layout with a white background and subtle border.",
+      "Use 'Space Grotesk' for large metric numbers.",
+      "Keep the UI dense but legible. Use 'p-6' for card padding.",
+      "Use 'recharts' for data visualization (simple line/bar charts)."
+    ],
+    "ecommerce": [
+      "Product cards should be clean: Image top, Title, Price, 'Add to Cart' button.",
+      "Use 'product_skincare', 'product_tech', and 'product_watch' as demo products."
+    ]
+  },
+  "universal_guidelines": [
+    "Avoid generic centered layouts. Use asymmetry.",
+    "Do not use gradients for text or backgrounds unless specified.",
+    "Use 2-3x more spacing than typical designs.",
+    "Every interaction needs a micro-animation.",
+    "Never use transparent backgrounds for dropdowns or headers with content underneath."
+  ]
+}
