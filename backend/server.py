@@ -908,7 +908,53 @@ async def complete_nomadhive_task(task_id: str, current_user: User = Depends(get
         {"$inc": {"total_points": task["points_reward"]}}
     )
     
-    return {"message": f"¡Tarea completada! +{task['points_reward']} puntos", "points_earned": task["points_reward"]}
+    # Check for level up
+    updated_profile = await db.nomadhive_profiles.find_one({"user_id": current_user.user_id}, {"_id": 0})
+    new_points = updated_profile.get("total_points", 0)
+    current_level = updated_profile.get("level", "Iniciante")
+    
+    # Level thresholds
+    level_thresholds = [
+        ("Platino", 5000),
+        ("Oro", 2000),
+        ("Plata", 1000),
+        ("Bronce", 500),
+        ("Iniciante", 0)
+    ]
+    
+    new_level = "Iniciante"
+    for level_name, threshold in level_thresholds:
+        if new_points >= threshold:
+            new_level = level_name
+            break
+    
+    # If level changed, update and notify
+    if new_level != current_level:
+        await db.nomadhive_profiles.update_one(
+            {"user_id": current_user.user_id},
+            {"$set": {"level": new_level}}
+        )
+        await create_notification(
+            user_id=current_user.user_id,
+            title="¡Subiste de Nivel!",
+            message=f"Felicidades, ahora eres nivel {new_level} en NomadHive. ¡Sigue así!",
+            notification_type="level_up",
+            icon="trophy",
+            link="/nomadhive/dashboard"
+        )
+    
+    # Create task completion notification (only for non-daily tasks)
+    if task["category"] != "daily":
+        await create_notification(
+            user_id=current_user.user_id,
+            title="¡Tarea Completada!",
+            message=f"Completaste '{task['title']}' y ganaste {task['points_reward']} puntos.",
+            notification_type="task_completed",
+            icon="check",
+            link="/nomadhive/dashboard"
+        )
+    
+    return {"message": f"¡Tarea completada! +{task['points_reward']} puntos", "points_earned": task["points_reward"], "new_level": new_level if new_level != current_level else None}
 
 @api_router.get("/nomadhive/rewards")
 async def get_nomadhive_rewards(current_user: User = Depends(get_current_user)):
