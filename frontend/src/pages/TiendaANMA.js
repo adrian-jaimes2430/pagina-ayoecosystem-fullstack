@@ -248,13 +248,13 @@ function TiendaANMA() {
       <button
         data-testid="lucidbot-toggle"
         onClick={() => setChatOpen(!chatOpen)}
-        className="fixed bottom-6 right-6 bg-[#0F766E] text-white p-4 rounded-full shadow-lg hover:bg-[#0D5F58] transition-all z-50"
+        className="fixed bottom-6 right-6 bg-[#0F766E] text-white p-4 rounded-full shadow-lg hover:bg-[#0D5F58] transition-all z-[100]"
       >
         <MessageSquare className="h-6 w-6" />
       </button>
 
       {chatOpen && (
-        <div className="fixed bottom-24 right-6 w-96 bg-white border border-slate-200 rounded-2xl shadow-2xl z-50">
+        <div data-testid="lucidbot-chat-container" className="fixed bottom-24 right-6 w-96 h-[500px] bg-white border border-slate-200 rounded-2xl shadow-2xl z-[100] flex flex-col">
           <div className="bg-[#0F766E] text-white p-4 rounded-t-2xl flex items-center justify-between">
             <h3 className="font-bold">LucidBot - Asistente ANMA</h3>
             <button onClick={() => setChatOpen(false)}>
