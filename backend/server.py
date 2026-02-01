@@ -1004,6 +1004,16 @@ async def redeem_nomadhive_reward(reward_id: str, current_user: User = Depends(g
         {"$inc": {"total_points": -reward["points_cost"]}}
     )
     
+    # Create notification for reward redemption
+    await create_notification(
+        user_id=current_user.user_id,
+        title="¡Recompensa Canjeada!",
+        message=f"Has canjeado '{reward['name']}'. Tu solicitud está siendo procesada.",
+        notification_type="reward_redeemed",
+        icon="gift",
+        link="/nomadhive/dashboard"
+    )
+    
     return {"message": f"¡Recompensa canjeada! Tu solicitud está siendo procesada.", "redemption_id": redemption_doc["redemption_id"]}
 
 @api_router.get("/nomadhive/orders")
