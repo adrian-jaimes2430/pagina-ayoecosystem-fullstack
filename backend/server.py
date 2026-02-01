@@ -111,6 +111,21 @@ class EmailRequest(BaseModel):
     subject: str
     html_content: str
 
+class InverfactContactForm(BaseModel):
+    name: str
+    email: EmailStr
+    phone: Optional[str] = None
+    message: str
+    interested_strategy: Optional[str] = None
+
+class InverfactStrategy(BaseModel):
+    strategy_id: str
+    name: str
+    description: str
+    min_deposit: float
+    category: str
+    is_active: bool = True
+
 # AUTH HELPER
 async def get_current_user(request: Request, session_token: Optional[str] = Cookie(None)) -> User:
     token = session_token
