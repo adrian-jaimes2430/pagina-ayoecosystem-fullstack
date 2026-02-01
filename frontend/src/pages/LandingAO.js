@@ -113,22 +113,28 @@ function LandingAO() {
               </Link>
             </div>
 
-            <div className="bg-white border border-slate-100 shadow-sm hover:shadow-lg transition-all p-8 rounded-2xl card-hover opacity-60">
-              <Users className="h-12 w-12 text-slate-400 mb-4" />
+            <div className="bg-white border border-slate-100 shadow-sm hover:shadow-lg transition-all p-8 rounded-2xl card-hover">
+              <Users className="h-12 w-12 text-[#0F172A] mb-4" />
               <h4 className="text-2xl font-bold text-[#0F172A] mb-3">NomadHive</h4>
               <p className="text-slate-600 mb-6">Plataforma de trabajo remoto con modelo de impulsadores. Gana comisiones vendiendo productos ANMA.</p>
-              <Button disabled className="bg-slate-300 text-slate-500 rounded-lg w-full cursor-not-allowed">
-                Próximamente
-              </Button>
+              <Link to="/nomadhive">
+                <Button data-testid="nomadhive-card-btn" className="bg-[#0F172A] hover:bg-[#1E293B] text-white rounded-lg w-full">
+                  Conocer NomadHive
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
             </div>
 
-            <div className="bg-white border border-slate-100 shadow-sm hover:shadow-lg transition-all p-8 rounded-2xl card-hover opacity-60">
-              <TrendingDown className="h-12 w-12 text-slate-400 mb-4" />
+            <div className="bg-white border border-slate-100 shadow-sm hover:shadow-lg transition-all p-8 rounded-2xl card-hover">
+              <TrendingDown className="h-12 w-12 text-[#0F172A] mb-4" />
               <h4 className="text-2xl font-bold text-[#0F172A] mb-3">Inverfact</h4>
-              <p className="text-slate-600 mb-6">Modelo de referidos e inversión estructurada con transparencia y trazabilidad.</p>
-              <Button disabled className="bg-slate-300 text-slate-500 rounded-lg w-full cursor-not-allowed">
-                Próximamente
-              </Button>
+              <p className="text-slate-600 mb-6">Modelo de inversión estructurada con referidos. Accede a estrategias con transparencia total.</p>
+              <Link to="/inverfact">
+                <Button data-testid="inverfact-card-btn" className="bg-[#0F172A] hover:bg-[#1E293B] text-white rounded-lg w-full">
+                  Conocer Inverfact
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
