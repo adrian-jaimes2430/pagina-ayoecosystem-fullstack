@@ -95,6 +95,23 @@ function Dashboard() {
                 Admin Panel
               </button>
             )}
+            
+            {/* Platform Links */}
+            <div className="pt-4 mt-4 border-t border-slate-200">
+              <p className="px-4 py-2 text-xs text-slate-400 uppercase tracking-wider">Plataformas</p>
+              <Link to="/nomadhive/dashboard" className="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg">
+                <Users className="h-4 w-4" />
+                NomadHive
+              </Link>
+              <Link to="/inverfact/dashboard" className="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg">
+                <TrendingDown className="h-4 w-4" />
+                Inverfact
+              </Link>
+              <Link to="/inverpulse/dashboard" className="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg">
+                <Zap className="h-4 w-4" />
+                InverPulse
+              </Link>
+            </div>
           </nav>
         </aside>
 
