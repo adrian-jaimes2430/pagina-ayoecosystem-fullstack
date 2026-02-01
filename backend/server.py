@@ -952,6 +952,30 @@ async def startup_event():
         }
         await db.users.insert_one(admin_doc)
         logger.info("Super admin user created")
+    else:
+        user_id = admin_user["user_id"]
+    
+    # Registrar admin en InverPulse si no está registrado
+    admin_inversor = await db.inversores_inverpulse.find_one({"user_id": user_id})
+    if not admin_inversor:
+        admin_inv_doc = {
+            "inversor_id": f"inv_admin_{uuid.uuid4().hex[:8]}",
+            "user_id": user_id,
+            "email": "jaimesblandon.adrianfelipe@gmail.com",
+            "name": "Gerencia General A&O",
+            "level": InverPulseLevel.RUBI,  # Nivel máximo para admin
+            "total_deposit": 0.0,
+            "total_profit": 0.0,
+            "kyc_status": "approved",
+            "kyc_documents": None,
+            "referral_code": "ADMIN2025",
+            "referred_by": None,
+            "direct_referrals": [],
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.inversores_inverpulse.insert_one(admin_inv_doc)
+        logger.info("Super admin registered in InverPulse with RUBI level")
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
