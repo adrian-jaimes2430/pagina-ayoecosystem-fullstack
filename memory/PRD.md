@@ -69,7 +69,20 @@ Build a full-stack web platform for "Company A&O Ecosystem," a parent company th
   - Leaderboard: Top impulsadores ranking
 - ✅ Points system with task completion
 - ✅ Referral code generation
-- ✅ Profile with level progression
+- ✅ Profile with level progression (Iniciante → Platino)
+- ✅ **Level up notifications** when reaching thresholds
+
+#### Notification System (NEW)
+- ✅ **Real-time notification bell** in Dashboard header
+- ✅ Notification types:
+  - Level up in NomadHive
+  - Task completion
+  - Reward redemption
+  - KYC approval/rejection in InverPulse
+  - Strategy activation in Inverfact
+- ✅ Mark as read (individual/all)
+- ✅ Time-ago timestamps
+- ✅ Click to navigate to relevant page
 
 #### Admin Dashboard (Centralized)
 - ✅ **Multi-section admin panel:**
