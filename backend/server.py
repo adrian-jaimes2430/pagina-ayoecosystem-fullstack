@@ -726,6 +726,215 @@ async def send_inverfact_contact(contact_form: InverfactContactForm):
         logger.warning(f"Could not send email: {str(e)}")
         return {"status": "success", "message": "Mensaje recibido. El equipo Inverfact te contactará pronto."}
 
+# ==================== NOMADHIVE ENDPOINTS ====================
+# Available tasks for impulsadores
+NOMADHIVE_TASKS = [
+    {"task_id": "task_daily_login", "title": "Inicio de Sesión Diario", "description": "Ingresa a tu dashboard todos los días", "points_reward": 5, "category": "daily"},
+    {"task_id": "task_daily_share", "title": "Compartir en Redes", "description": "Comparte un producto de ANMA en redes sociales", "points_reward": 10, "category": "daily"},
+    {"task_id": "task_weekly_order", "title": "Pedido Semanal", "description": "Registra al menos un pedido esta semana", "points_reward": 50, "category": "weekly"},
+    {"task_id": "task_weekly_referral", "title": "Referido Semanal", "description": "Refiere a una persona a Inverfact esta semana", "points_reward": 100, "category": "weekly"},
+    {"task_id": "task_onboard_profile", "title": "Completar Perfil", "description": "Completa toda tu información de perfil", "points_reward": 25, "category": "onboarding"},
+    {"task_id": "task_onboard_first_order", "title": "Primer Pedido", "description": "Registra tu primer pedido de productos ANMA", "points_reward": 100, "category": "onboarding"},
+]
+
+# Available rewards
+NOMADHIVE_REWARDS = [
+    {"reward_id": "reward_cash_10", "name": "Bono $10 USD", "description": "Canjea por efectivo en tu próximo pago", "points_cost": 500, "category": "cash"},
+    {"reward_id": "reward_cash_25", "name": "Bono $25 USD", "description": "Canjea por efectivo en tu próximo pago", "points_cost": 1000, "category": "cash"},
+    {"reward_id": "reward_product_kit", "name": "Kit de Productos ANMA", "description": "Kit de productos de salud valorado en $50", "points_cost": 750, "category": "product"},
+    {"reward_id": "reward_exclusive", "name": "Acceso VIP Inverfact", "description": "Acceso anticipado a nuevas estrategias", "points_cost": 2000, "category": "experience"},
+]
+
+@api_router.get("/nomadhive/profile")
+async def get_nomadhive_profile(current_user: User = Depends(get_current_user)):
+    """Get impulsador profile for NomadHive"""
+    profile = await db.nomadhive_profiles.find_one({"user_id": current_user.user_id}, {"_id": 0})
+    
+    if not profile:
+        # Create default profile for impulsador
+        referral_code = f"NH{uuid.uuid4().hex[:6].upper()}"
+        profile = {
+            "user_id": current_user.user_id,
+            "email": current_user.email,
+            "name": current_user.name,
+            "referral_code": referral_code,
+            "total_points": 0,
+            "total_earnings": 0.0,
+            "total_orders": 0,
+            "total_referrals": 0,
+            "level": "Iniciante",  # Iniciante, Bronce, Plata, Oro, Platino
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.nomadhive_profiles.insert_one(profile)
+    
+    # Calculate stats
+    orders = await db.orders.find({"impulsador_id": current_user.user_id}, {"_id": 0}).to_list(1000)
+    paid_orders = [o for o in orders if o.get("payment_status") == "paid"]
+    total_commission = sum(o.get("commission_amount", 0) for o in paid_orders)
+    
+    referrals = await db.inverfact_referrals.count_documents({"referred_by": current_user.user_id})
+    
+    profile["stats"] = {
+        "total_orders": len(orders),
+        "paid_orders": len(paid_orders),
+        "total_commission": total_commission,
+        "total_referrals": referrals
+    }
+    
+    return profile
+
+@api_router.get("/nomadhive/tasks")
+async def get_nomadhive_tasks(current_user: User = Depends(get_current_user)):
+    """Get available tasks and completion status"""
+    # Get user's completed tasks
+    completed = await db.nomadhive_completed_tasks.find(
+        {"user_id": current_user.user_id},
+        {"_id": 0}
+    ).to_list(100)
+    completed_ids = {c["task_id"] for c in completed}
+    
+    # Build task list with status
+    tasks = []
+    for task in NOMADHIVE_TASKS:
+        task_copy = task.copy()
+        task_copy["is_completed"] = task["task_id"] in completed_ids
+        tasks.append(task_copy)
+    
+    return {"tasks": tasks, "completed_count": len(completed_ids), "total_count": len(NOMADHIVE_TASKS)}
+
+@api_router.post("/nomadhive/tasks/{task_id}/complete")
+async def complete_nomadhive_task(task_id: str, current_user: User = Depends(get_current_user)):
+    """Mark a task as completed and award points"""
+    # Validate task exists
+    task = next((t for t in NOMADHIVE_TASKS if t["task_id"] == task_id), None)
+    if not task:
+        raise HTTPException(status_code=404, detail="Tarea no encontrada")
+    
+    # Check if already completed (for non-daily tasks)
+    if task["category"] != "daily":
+        existing = await db.nomadhive_completed_tasks.find_one({
+            "user_id": current_user.user_id,
+            "task_id": task_id
+        })
+        if existing:
+            raise HTTPException(status_code=400, detail="Tarea ya completada")
+    else:
+        # For daily tasks, check if completed today
+        today = datetime.now(timezone.utc).date().isoformat()
+        existing = await db.nomadhive_completed_tasks.find_one({
+            "user_id": current_user.user_id,
+            "task_id": task_id,
+            "completed_date": today
+        })
+        if existing:
+            raise HTTPException(status_code=400, detail="Tarea diaria ya completada hoy")
+    
+    # Record completion
+    completion_doc = {
+        "user_id": current_user.user_id,
+        "task_id": task_id,
+        "points_earned": task["points_reward"],
+        "completed_at": datetime.now(timezone.utc).isoformat(),
+        "completed_date": datetime.now(timezone.utc).date().isoformat()
+    }
+    await db.nomadhive_completed_tasks.insert_one(completion_doc)
+    
+    # Award points
+    await db.nomadhive_profiles.update_one(
+        {"user_id": current_user.user_id},
+        {"$inc": {"total_points": task["points_reward"]}}
+    )
+    
+    return {"message": f"¡Tarea completada! +{task['points_reward']} puntos", "points_earned": task["points_reward"]}
+
+@api_router.get("/nomadhive/rewards")
+async def get_nomadhive_rewards(current_user: User = Depends(get_current_user)):
+    """Get available rewards for redemption"""
+    profile = await db.nomadhive_profiles.find_one({"user_id": current_user.user_id}, {"_id": 0})
+    current_points = profile.get("total_points", 0) if profile else 0
+    
+    rewards = []
+    for reward in NOMADHIVE_REWARDS:
+        reward_copy = reward.copy()
+        reward_copy["can_redeem"] = current_points >= reward["points_cost"]
+        rewards.append(reward_copy)
+    
+    return {"rewards": rewards, "current_points": current_points}
+
+@api_router.post("/nomadhive/rewards/{reward_id}/redeem")
+async def redeem_nomadhive_reward(reward_id: str, current_user: User = Depends(get_current_user)):
+    """Redeem a reward with points"""
+    # Validate reward
+    reward = next((r for r in NOMADHIVE_REWARDS if r["reward_id"] == reward_id), None)
+    if not reward:
+        raise HTTPException(status_code=404, detail="Recompensa no encontrada")
+    
+    # Check points
+    profile = await db.nomadhive_profiles.find_one({"user_id": current_user.user_id}, {"_id": 0})
+    if not profile:
+        raise HTTPException(status_code=404, detail="Perfil no encontrado")
+    
+    if profile.get("total_points", 0) < reward["points_cost"]:
+        raise HTTPException(status_code=400, detail="Puntos insuficientes")
+    
+    # Record redemption
+    redemption_doc = {
+        "redemption_id": f"redeem_{uuid.uuid4().hex[:12]}",
+        "user_id": current_user.user_id,
+        "reward_id": reward_id,
+        "reward_name": reward["name"],
+        "points_spent": reward["points_cost"],
+        "status": "pending",
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    await db.nomadhive_redemptions.insert_one(redemption_doc)
+    
+    # Deduct points
+    await db.nomadhive_profiles.update_one(
+        {"user_id": current_user.user_id},
+        {"$inc": {"total_points": -reward["points_cost"]}}
+    )
+    
+    return {"message": f"¡Recompensa canjeada! Tu solicitud está siendo procesada.", "redemption_id": redemption_doc["redemption_id"]}
+
+@api_router.get("/nomadhive/orders")
+async def get_nomadhive_orders(current_user: User = Depends(get_current_user)):
+    """Get orders for the impulsador"""
+    orders = await db.orders.find(
+        {"impulsador_id": current_user.user_id},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(100)
+    
+    for order in orders:
+        if isinstance(order.get("created_at"), str):
+            order["created_at"] = datetime.fromisoformat(order["created_at"])
+    
+    return {"orders": orders, "count": len(orders)}
+
+@api_router.get("/nomadhive/referrals")
+async def get_nomadhive_referrals(current_user: User = Depends(get_current_user)):
+    """Get referrals for the impulsador"""
+    profile = await db.nomadhive_profiles.find_one({"user_id": current_user.user_id}, {"_id": 0})
+    referral_code = profile.get("referral_code") if profile else None
+    
+    # Find users who used this referral code
+    referrals = await db.inverfact_referrals.find(
+        {"referred_by": current_user.user_id},
+        {"_id": 0}
+    ).to_list(100)
+    
+    return {"referrals": referrals, "count": len(referrals), "referral_code": referral_code}
+
+@api_router.get("/nomadhive/leaderboard")
+async def get_nomadhive_leaderboard():
+    """Get top impulsadores leaderboard"""
+    profiles = await db.nomadhive_profiles.find(
+        {},
+        {"_id": 0, "user_id": 1, "name": 1, "total_points": 1, "level": 1}
+    ).sort("total_points", -1).limit(10).to_list(10)
+    
+    return {"leaderboard": profiles}
+
 # USERS MANAGEMENT
 @api_router.get("/users", response_model=List[User])
 async def get_users(current_user: User = Depends(get_current_user)):
