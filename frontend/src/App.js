@@ -15,6 +15,7 @@ import Dashboard from '@/pages/Dashboard';
 import AdminDashboard from '@/pages/AdminDashboard';
 import DashboardInverPulse from '@/pages/DashboardInverPulse';
 import DashboardInverfact from '@/pages/DashboardInverfact';
+import DashboardNomadHive from '@/pages/DashboardNomadHive';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import PaymentSuccess from '@/pages/PaymentSuccess';
 import Terminos from '@/pages/Terminos';
