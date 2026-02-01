@@ -143,13 +143,13 @@ function LandingANMA() {
       {/* CTA */}
       <section className="py-24 bg-[#0F766E] text-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h3 className="text-4xl lg:text-5xl font-bold mb-6 tracking-tight">¿Listo para comenzar a vender?</h3>
+          <h3 className="text-4xl lg:text-5xl font-bold mb-6 tracking-tight">¿Listo para comprar?</h3>
           <p className="text-xl text-teal-100 mb-8">
-            Únete a ANMA Soluciones y comienza a generar ingresos desde casa.
+            Descubre los mejores productos trending del mercado en ANMA Soluciones.
           </p>
-          <Link to="/register">
+          <Link to="/anma/tienda">
             <Button data-testid="anma-footer-cta" size="lg" className="bg-white text-[#0F766E] hover:bg-slate-100 rounded-lg px-8 py-6 text-lg font-semibold">
-              Registrarse como Impulsador
+              Ir a la Tienda
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
