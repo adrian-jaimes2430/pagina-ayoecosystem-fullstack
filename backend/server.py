@@ -630,7 +630,7 @@ async def get_dashboard_stats(current_user: User = Depends(get_current_user)):
 # ==================== INVERPULSE ENDPOINTS ====================
 from inverpulse_models import (
     InverPulseLevel, KYCStatus, InversorInverPulse, InversorDeposit, 
-    TradingSignal, KYCRequest, LevelRequirements, check_level_eligibility
+    TradingSignal, KYCRequest, LevelRequirements
 )
 
 # INVERPULSE - Registro de inversor
