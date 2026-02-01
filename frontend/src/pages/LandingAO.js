@@ -206,8 +206,8 @@ function LandingAO() {
             </div>
             <div>
               <h4 className="font-bold text-[#0F172A] mb-4 text-lg">Contacto</h4>
-              <p className="text-slate-600 text-sm">jaimesblandon.adrianfelipe@gmail.com</p>
-              <p className="text-slate-600 text-sm mt-2">ayoecosistema.com</p>
+              <p className="text-slate-600 text-sm">infoayo.ecosistema@gmail.com</p>
+              <p className="text-slate-600 text-sm mt-2">studio.ayosoluciones@gmail.com</p>
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-slate-200 text-center text-sm text-slate-600">
