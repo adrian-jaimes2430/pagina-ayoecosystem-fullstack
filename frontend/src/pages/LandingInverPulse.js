@@ -168,6 +168,9 @@ function LandingInverPulse() {
             <Link to="/login">
               <Button data-testid="inverpulse-header-login" className="bg-[#F59E0B] hover:bg-[#D97706] text-white rounded-lg">{t.nav.login}</Button>
             </Link>
+            <Link to="/inverpulse/dashboard">
+              <Button data-testid="inverpulse-header-dashboard" variant="outline" className="rounded-lg border-[#F59E0B] text-[#F59E0B] hover:bg-[#F59E0B] hover:text-white">Dashboard</Button>
+            </Link>
           </nav>
         </div>
       </header>
