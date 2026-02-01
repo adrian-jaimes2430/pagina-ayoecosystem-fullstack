@@ -105,10 +105,13 @@ function Dashboard() {
               <h1 className="text-2xl font-bold text-[#0F172A]">Bienvenido, {user.name}</h1>
               <p className="text-sm text-slate-600">Rol: {user.role}</p>
             </div>
-            <Button data-testid="logout-btn" onClick={handleLogout} variant="outline" className="rounded-lg">
-              <LogOut className="h-4 w-4 mr-2" />
-              Cerrar Sesión
-            </Button>
+            <div className="flex items-center gap-4">
+              <NotificationBell />
+              <Button data-testid="logout-btn" onClick={handleLogout} variant="outline" className="rounded-lg">
+                <LogOut className="h-4 w-4 mr-2" />
+                Cerrar Sesión
+              </Button>
+            </div>
           </header>
 
           <div className="p-8">
