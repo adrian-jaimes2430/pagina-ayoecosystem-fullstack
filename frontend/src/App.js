@@ -14,6 +14,7 @@ import AuthCallback from '@/pages/AuthCallback';
 import Dashboard from '@/pages/Dashboard';
 import AdminDashboard from '@/pages/AdminDashboard';
 import DashboardInverPulse from '@/pages/DashboardInverPulse';
+import DashboardInverfact from '@/pages/DashboardInverfact';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import PaymentSuccess from '@/pages/PaymentSuccess';
 import Terminos from '@/pages/Terminos';
