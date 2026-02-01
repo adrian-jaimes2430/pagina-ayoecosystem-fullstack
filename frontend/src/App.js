@@ -41,6 +41,7 @@ function AppRouter() {
       <Route path="/payment-success" element={<PaymentSuccess />} />
       <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
       <Route path="/admin" element={<ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute>} />
+      <Route path="/inverpulse/dashboard" element={<ProtectedRoute><DashboardInverPulse /></ProtectedRoute>} />
     </Routes>
   );
 }
