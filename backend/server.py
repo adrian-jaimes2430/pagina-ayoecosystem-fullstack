@@ -1331,10 +1331,34 @@ async def review_inverpulse_kyc(inversor_id: str, request: Request, current_user
     if status not in ["approved", "rejected"]:
         raise HTTPException(status_code=400, detail="Status inválido")
     
+    # Get investor to find user_id
+    investor = await db.inversores_inverpulse.find_one({"inversor_id": inversor_id}, {"_id": 0})
+    
     await db.inversores_inverpulse.update_one(
         {"inversor_id": inversor_id},
         {"$set": {"kyc_status": status}}
     )
+    
+    # Notify user about KYC result
+    if investor:
+        if status == "approved":
+            await create_notification(
+                user_id=investor["user_id"],
+                title="¡KYC Aprobado!",
+                message="Tu verificación de identidad en InverPulse ha sido aprobada. Ya puedes operar.",
+                notification_type="kyc_approved",
+                icon="check-circle",
+                link="/inverpulse/dashboard"
+            )
+        else:
+            await create_notification(
+                user_id=investor["user_id"],
+                title="KYC Rechazado",
+                message="Tu verificación de identidad en InverPulse fue rechazada. Por favor revisa tus documentos.",
+                notification_type="kyc_rejected",
+                icon="x-circle",
+                link="/inverpulse/dashboard"
+            )
     
     return {"message": f"KYC {status}"}
 
