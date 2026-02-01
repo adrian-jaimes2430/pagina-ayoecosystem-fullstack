@@ -45,6 +45,7 @@ function AppRouter() {
       <Route path="/admin" element={<ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute>} />
       <Route path="/inverpulse/dashboard" element={<ProtectedRoute><DashboardInverPulse /></ProtectedRoute>} />
       <Route path="/inverfact/dashboard" element={<ProtectedRoute><DashboardInverfact /></ProtectedRoute>} />
+      <Route path="/nomadhive/dashboard" element={<ProtectedRoute><DashboardNomadHive /></ProtectedRoute>} />
     </Routes>
   );
 }
