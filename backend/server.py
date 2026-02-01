@@ -653,6 +653,20 @@ async def activate_user_strategy(user_id: str, request: Request, current_user: U
     }
     await db.inverfact_user_strategies.insert_one(activation_doc)
     
+    # Get strategy name for notification
+    strategy_info = next((s for s in INVERFACT_STRATEGIES if s["strategy_id"] == strategy_id), {})
+    strategy_name = strategy_info.get("name", strategy_id)
+    
+    # Notify user about strategy activation
+    await create_notification(
+        user_id=user_id,
+        title="¡Nueva Estrategia Activada!",
+        message=f"Ahora tienes acceso a la estrategia '{strategy_name}' en Inverfact.",
+        notification_type="strategy_activated",
+        icon="trending-up",
+        link="/inverfact/dashboard"
+    )
+    
     return {"message": "Estrategia activada exitosamente"}
 
 @api_router.delete("/inverfact/admin/users/{user_id}/strategies/{strategy_id}")
