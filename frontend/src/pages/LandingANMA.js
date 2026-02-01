@@ -101,37 +101,37 @@ function LandingANMA() {
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="relative h-[500px]">
-              <img src={REMOTE_AGENT} alt="Trabajo remoto" className="absolute inset-0 w-full h-full object-cover rounded-2xl shadow-xl" />
+              <img src={REMOTE_AGENT} alt="Compra online" className="absolute inset-0 w-full h-full object-cover rounded-2xl shadow-xl" />
             </div>
             <div>
-              <h3 className="text-4xl lg:text-5xl font-bold text-[#0F172A] mb-6 tracking-tight">Beneficios para Impulsadores</h3>
+              <h3 className="text-4xl lg:text-5xl font-bold text-[#0F172A] mb-6 tracking-tight">¿Por Qué ANMA?</h3>
               <div className="space-y-6">
                 <div className="flex gap-4">
-                  <DollarSign className="h-8 w-8 text-[#0F766E] flex-shrink-0" />
+                  <Package className="h-8 w-8 text-[#0F766E] flex-shrink-0" />
                   <div>
-                    <h4 className="text-xl font-bold text-[#0F172A] mb-2">Comisiones Competitivas</h4>
-                    <p className="text-slate-600">Gana entre 10% y 20% por cada venta según el producto.</p>
+                    <h4 className="text-xl font-bold text-[#0F172A] mb-2">Productos Curados</h4>
+                    <p className="text-slate-600">Seleccionamos los mejores productos trending del mercado.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <Truck className="h-8 w-8 text-[#0F766E] flex-shrink-0" />
                   <div>
-                    <h4 className="text-xl font-bold text-[#0F172A] mb-2">Sin Gestión de Logística</h4>
-                    <p className="text-slate-600">Nosotros manejamos inventario, envíos y devoluciones.</p>
+                    <h4 className="text-xl font-bold text-[#0F172A] mb-2">Envío Directo</h4>
+                    <p className="text-slate-600">Recibe tus productos directamente desde nuestros proveedores.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <MessageSquare className="h-8 w-8 text-[#0F766E] flex-shrink-0" />
                   <div>
-                    <h4 className="text-xl font-bold text-[#0F172A] mb-2">Soporte con LucidBot</h4>
-                    <p className="text-slate-600">IA que te ayuda a responder dudas de clientes 24/7.</p>
+                    <h4 className="text-xl font-bold text-[#0F172A] mb-2">Soporte 24/7 con LucidBot</h4>
+                    <p className="text-slate-600">IA que te ayuda a resolver dudas sobre productos y pedidos.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <TrendingUp className="h-8 w-8 text-[#0F766E] flex-shrink-0" />
+                  <DollarSign className="h-8 w-8 text-[#0F766E] flex-shrink-0" />
                   <div>
-                    <h4 className="text-xl font-bold text-[#0F172A] mb-2">Dashboard Profesional</h4>
-                    <p className="text-slate-600">Rastrea tus ventas, comisiones y pagos en tiempo real.</p>
+                    <h4 className="text-xl font-bold text-[#0F172A] mb-2">Precios Competitivos</h4>
+                    <p className="text-slate-600">Accede a productos de calidad a precios directos del mercado.</p>
                   </div>
                 </div>
               </div>
