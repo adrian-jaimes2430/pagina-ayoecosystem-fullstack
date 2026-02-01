@@ -182,29 +182,34 @@ function LandingInverfact() {
               <p className="text-xs text-slate-500 italic">Requiere activación por equipo Inverfact tras educación inicial</p>
             </div>
 
-            {/* InverPulse - Próximamente */}
-            <div className="bg-gradient-to-br from-slate-100 to-slate-50 border-2 border-dashed border-slate-300 p-8 rounded-2xl relative overflow-hidden">
+            {/* InverPulse - ACTIVO */}
+            <div className="bg-gradient-to-br from-[#F59E0B]/10 to-[#F59E0B]/5 border-2 border-[#F59E0B] p-8 rounded-2xl shadow-md hover:shadow-xl transition-all relative overflow-hidden">
               <div className="absolute top-4 right-4">
-                <Zap className="h-8 w-8 text-slate-400" />
+                <Zap className="h-8 w-8 text-[#F59E0B]" />
               </div>
-              <div className="inline-block bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-semibold mb-4">Próximamente</div>
+              <div className="inline-block bg-[#F59E0B] text-white px-3 py-1 rounded-full text-xs font-semibold mb-4">ACTIVO · Broker Propio</div>
               <h4 className="text-2xl font-bold text-[#0F172A] mb-2">InverPulse</h4>
-              <p className="text-slate-600 mb-6">Plataforma broker propia de A&O Ecosystem. Modelo similar a Grupo GT con tecnología propietaria.</p>
+              <p className="text-slate-600 mb-6">Plataforma broker propia de A&O Ecosystem. Modelo similar a Grupo GT con tecnología propietaria avanzada.</p>
               <div className="space-y-3 mb-6">
                 <div className="flex items-center gap-2">
-                  <div className="h-5 w-5 rounded-full bg-slate-300"></div>
-                  <span className="text-sm text-slate-500">Trading avanzado</span>
+                  <CheckCircle className="h-5 w-5 text-[#F59E0B]" />
+                  <span className="text-sm text-slate-700">Trading avanzado BTC, ETH, BNB</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="h-5 w-5 rounded-full bg-slate-300"></div>
-                  <span className="text-sm text-slate-500">Tecnología propietaria</span>
+                  <CheckCircle className="h-5 w-5 text-[#F59E0B]" />
+                  <span className="text-sm text-slate-700">Tecnología propietaria</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="h-5 w-5 rounded-full bg-slate-300"></div>
-                  <span className="text-sm text-slate-500">Listo para producción</span>
+                  <CheckCircle className="h-5 w-5 text-[#F59E0B]" />
+                  <span className="text-sm text-slate-700">Multilingüe (ES/EN)</span>
                 </div>
               </div>
-              <p className="text-xs text-slate-500 italic">En proceso de términos legales para operación</p>
+              <Link to="/inverpulse">
+                <Button className="w-full bg-[#F59E0B] hover:bg-[#D97706] text-white rounded-lg font-semibold">
+                  Ver Plataforma InverPulse
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
