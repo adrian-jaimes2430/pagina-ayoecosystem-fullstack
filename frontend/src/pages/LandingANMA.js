@@ -17,7 +17,7 @@ function LandingANMA() {
           <nav className="hidden md:flex items-center gap-8">
             <a href="#como-funciona" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Cómo Funciona</a>
             <Link to="/anma/tienda" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Tienda</Link>
-            <a href="#impulsadores" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Impulsadores</a>
+            <a href="#beneficios" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Beneficios</a>
             <Link to="/login">
               <Button data-testid="anma-header-login" className="bg-[#0F766E] hover:bg-[#0D5F58] text-white rounded-lg">Iniciar Sesión</Button>
             </Link>
