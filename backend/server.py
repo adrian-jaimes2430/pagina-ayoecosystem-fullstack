@@ -126,6 +126,22 @@ class InverfactStrategy(BaseModel):
     category: str
     is_active: bool = True
 
+class NomadHiveTask(BaseModel):
+    task_id: str
+    title: str
+    description: str
+    points_reward: int
+    category: str  # "daily", "weekly", "onboarding", "referral"
+    is_completed: bool = False
+
+class NomadHiveReward(BaseModel):
+    reward_id: str
+    name: str
+    description: str
+    points_cost: int
+    category: str  # "product", "cash", "experience"
+    is_available: bool = True
+
 # AUTH HELPER
 async def get_current_user(request: Request, session_token: Optional[str] = Cookie(None)) -> User:
     token = session_token
