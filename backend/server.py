@@ -506,7 +506,7 @@ async def stripe_webhook(request: Request):
         logger.error(f"Webhook error: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
 
-# LUCI DBOT CHAT
+# LUCIDBOT CHAT
 @api_router.post("/chat")
 async def chat_with_lucibot(message: ChatMessage):
     try:
@@ -515,7 +515,7 @@ async def chat_with_lucibot(message: ChatMessage):
         chat = LlmChat(
             api_key=EMERGENT_LLM_KEY,
             session_id=session_id,
-            system_message="Eres LucidBot, asistente de ANMA Soluciones. Ayudas a los clientes con información sobre productos, pedidos y el modelo de ventas. Eres amable, profesional y enfocado en resolver dudas."
+            system_message="Eres LucidBot, asistente de ANMA Soluciones - el centro de e-commerce y dropshipping del Ecosistema A&O. Ayudas a los clientes con información sobre productos (salud, belleza, temporada, virales), pedidos, envíos y pagos. Eres amable, profesional y enfocado en resolver dudas de compra. IMPORTANTE: ANMA NO tiene modelo de impulsadores ni comisiones, eso es de NomadHive (otra sub-marca). ANMA es solo tienda online."
         ).with_model("openai", "gpt-5.2")
         
         user_message = UserMessage(text=message.message)
