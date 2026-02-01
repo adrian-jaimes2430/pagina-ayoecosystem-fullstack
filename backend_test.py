@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 
 class AOEcosistemaAPITester:
-    def __init__(self, base_url="https://corporate-hub-67.preview.emergentagent.com/api"):
+    def __init__(self, base_url="https://brandportal-9.preview.emergentagent.com/api"):
         self.base_url = base_url
         self.session_token = None
         self.admin_token = None
