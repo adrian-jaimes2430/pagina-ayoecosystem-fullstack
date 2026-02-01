@@ -162,7 +162,7 @@ function LandingANMA() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <h4 className="font-bold text-[#0F172A] mb-4 text-lg">ANMA Soluciones</h4>
-              <p className="text-slate-600 text-sm">Parte del ecosistema A&O. Dropshipping y ventas digitales profesionales.</p>
+              <p className="text-slate-600 text-sm">Parte del ecosistema A&O. Tu centro de e-commerce y dropshipping con productos trending.</p>
             </div>
             <div>
               <h4 className="font-bold text-[#0F172A] mb-4 text-lg">Enlaces</h4>
