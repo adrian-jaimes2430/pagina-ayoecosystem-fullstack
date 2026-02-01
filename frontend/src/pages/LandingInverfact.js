@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { TrendingDown, Shield, Users, DollarSign, ArrowRight, CheckCircle, AlertTriangle, FileText } from 'lucide-react';
+import { TrendingDown, Shield, Users, DollarSign, ArrowRight, CheckCircle, AlertTriangle, FileText, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const FINANCE_IMAGE = "https://images.unsplash.com/photo-1579532537598-459ecdaf39cc?crop=entropy&cs=srgb&fm=jpg&q=85";
@@ -18,7 +18,7 @@ function LandingInverfact() {
           <nav className="hidden md:flex items-center gap-8">
             <a href="#como-funciona" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Cómo Funciona</a>
             <a href="#estrategias" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Estrategias</a>
-            <a href="#transparencia" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Transparencia</a>
+            <a href="#comunidad" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Comunidad</a>
             <Link to="/login">
               <Button data-testid="inverfact-header-login" className="bg-[#0F172A] hover:bg-[#1E293B] text-white rounded-lg">Iniciar Sesión</Button>
             </Link>
@@ -32,19 +32,19 @@ function LandingInverfact() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="animate-slide-in">
               <div className="inline-block bg-[#0F172A]/10 text-[#0F172A] px-4 py-2 rounded-full text-sm font-semibold mb-4">
-                Inversión Estructurada · Fase Inicial
+                Educación Financiera · Comunidad de Crecimiento
               </div>
               <h2 className="text-5xl lg:text-6xl font-bold text-[#0F172A] leading-tight tracking-tight mb-6">
-                Invierte Inteligente
-                <span className="block text-[#0F766E] mt-2">Crece con Transparencia</span>
+                Aprende a Crear
+                <span className="block text-[#0F766E] mt-2">Capital Sostenible</span>
               </h2>
               <p className="text-lg text-slate-600 mb-8 leading-relaxed">
-                Inverfact es tu plataforma de inversión estructurada con modelo de referidos. Accede a estrategias de inversión profesionales con total transparencia y trazabilidad.
+                Inverfact es una comunidad de educación financiera enfocada en crecimiento a largo plazo con metodología comprobada por más de 10,300 personas a nivel mundial.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/register">
                   <Button data-testid="inverfact-hero-register" size="lg" className="bg-[#0F172A] hover:bg-[#1E293B] text-white rounded-lg px-8 py-6 text-lg font-semibold shadow-lg">
-                    Comenzar a Invertir
+                    Unirme a la Comunidad
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
@@ -62,28 +62,23 @@ function LandingInverfact() {
         </div>
       </section>
 
-      {/* ADVERTENCIA LEGAL */}
-      <section className="py-8 bg-yellow-50 border-y border-yellow-200">
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="flex gap-4 items-start">
-            <AlertTriangle className="h-6 w-6 text-yellow-700 flex-shrink-0 mt-1" />
-            <div>
-              <h4 className="font-bold text-yellow-900 mb-2">Advertencia Legal Importante</h4>
-              <p className="text-sm text-yellow-800">
-                <strong>Inverfact está en fase inicial de desarrollo tecnológico.</strong> No garantizamos rendimientos fijos. Toda inversión implica riesgos. Esta plataforma es educativa y experimental. Consulta con un asesor financiero antes de invertir.
-              </p>
-            </div>
-          </div>
+      {/* QUÉ ES INVERFACT */}
+      <section className="py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h3 className="text-3xl font-bold text-[#0F172A] mb-6">¿Qué es Inverfact?</h3>
+          <p className="text-lg text-slate-600 leading-relaxed">
+            Somos una <strong>comunidad de educación financiera</strong> que se basa en el crecimiento a largo plazo del capital con educación continua <strong>ANTES</strong> de invertir. No recibimos dinero directamente de los inversores. Te acompañamos con metodología probada para que aprendas a crear capital sostenible y tangible en diferentes estrategias de inversión.
+          </p>
         </div>
       </section>
 
       {/* CÓMO FUNCIONA */}
-      <section id="como-funciona" className="py-24 bg-white">
+      <section id="como-funciona" className="py-24 bg-slate-50">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="text-center mb-16">
             <h3 className="text-4xl lg:text-5xl font-bold text-[#0F172A] mb-4 tracking-tight">Cómo Funciona</h3>
             <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              Proceso transparente para acceder a inversión estructurada
+              Proceso educativo para aprender a invertir con acompañamiento
             </p>
           </div>
 
@@ -91,133 +86,166 @@ function LandingInverfact() {
             <div className="text-center">
               <div className="w-16 h-16 bg-[#0F172A] text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
               <h4 className="text-xl font-bold text-[#0F172A] mb-2">Regístrate</h4>
-              <p className="text-slate-600">Crea tu cuenta en Inverfact y completa el proceso de verificación.</p>
+              <p className="text-slate-600">Únete a la comunidad Inverfact y accede a educación financiera.</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-[#0F172A] text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
-              <h4 className="text-xl font-bold text-[#0F172A] mb-2">Elige Estrategia</h4>
-              <p className="text-slate-600">Selecciona la estrategia de inversión que se ajuste a tu perfil de riesgo.</p>
+              <h4 className="text-xl font-bold text-[#0F172A] mb-2">Aprende</h4>
+              <p className="text-slate-600">Recibe educación sólida sobre la estrategia que elijas antes de invertir.</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-[#0F172A] text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">3</div>
-              <h4 className="text-xl font-bold text-[#0F172A] mb-2">Depósito Inicial</h4>
-              <p className="text-slate-600">Realiza tu depósito inicial en la estrategia seleccionada.</p>
+              <h4 className="text-xl font-bold text-[#0F172A] mb-2">Invierte</h4>
+              <p className="text-slate-600">Realiza tu inversión en la plataforma correspondiente con nuestro acompañamiento.</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-[#0F766E] text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">4</div>
-              <h4 className="text-xl font-bold text-[#0F172A] mb-2">Monitorea</h4>
-              <p className="text-slate-600">Rastrea tu inversión y rendimientos desde tu dashboard.</p>
+              <h4 className="text-xl font-bold text-[#0F172A] mb-2">Crece</h4>
+              <p className="text-slate-600">Construye capital sostenible a largo plazo con metodología comprobada.</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* ESTRATEGIAS */}
-      <section id="estrategias" className="py-24 bg-slate-50">
+      <section id="estrategias" className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="text-center mb-16">
             <h3 className="text-4xl lg:text-5xl font-bold text-[#0F172A] mb-4 tracking-tight">Estrategias de Inversión</h3>
-            <p className="text-slate-600 text-lg">Fase inicial - Modelos en desarrollo</p>
+            <p className="text-slate-600 text-lg">Con educación y acompañamiento profesional</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white border border-slate-200 p-8 rounded-2xl shadow-sm hover:shadow-lg transition-all">
-              <h4 className="text-2xl font-bold text-[#0F172A] mb-2">Conservadora</h4>
-              <p className="text-slate-600 mb-6">Perfil de bajo riesgo con enfoque en estabilidad y capital protegido.</p>
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-[#0F766E]" />
-                  <span className="text-sm text-slate-600">Depósito mínimo: $500</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-[#0F766E]" />
-                  <span className="text-sm text-slate-600">Riesgo: Bajo</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-[#0F766E]" />
-                  <span className="text-sm text-slate-600">Plazo: Flexible</span>
-                </div>
-              </div>
-            </div>
-
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Grupo GT-KWNEX */}
             <div className="bg-white border-2 border-[#0F766E] p-8 rounded-2xl shadow-md hover:shadow-xl transition-all">
-              <div className="inline-block bg-[#0F766E] text-white px-3 py-1 rounded-full text-xs font-semibold mb-4">Recomendada</div>
-              <h4 className="text-2xl font-bold text-[#0F172A] mb-2">Moderada</h4>
-              <p className="text-slate-600 mb-6">Balance entre riesgo y potencial de crecimiento a mediano plazo.</p>
-              <div className="space-y-3">
+              <div className="inline-block bg-[#0F766E] text-white px-3 py-1 rounded-full text-xs font-semibold mb-4">Trading · Blockchain</div>
+              <h4 className="text-2xl font-bold text-[#0F172A] mb-2">Grupo GT - KWNEX</h4>
+              <p className="text-slate-600 mb-6">Estrategia basada en trading y blockchain con metodología probada y acompañamiento continuo.</p>
+              <div className="space-y-3 mb-6">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-[#0F766E]" />
-                  <span className="text-sm text-slate-600">Depósito mínimo: $1,000</span>
+                  <span className="text-sm text-slate-600">Depósito mínimo: $100 USD</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-[#0F766E]" />
-                  <span className="text-sm text-slate-600">Riesgo: Medio</span>
+                  <span className="text-sm text-slate-600">Trading + Blockchain</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-[#0F766E]" />
-                  <span className="text-sm text-slate-600">Plazo: 6-12 meses</span>
+                  <span className="text-sm text-slate-600">Educación continua incluida</span>
                 </div>
               </div>
+              <p className="text-xs text-slate-500 italic">Requiere activación por equipo Inverfact tras educación inicial</p>
             </div>
 
+            {/* InCruises */}
             <div className="bg-white border border-slate-200 p-8 rounded-2xl shadow-sm hover:shadow-lg transition-all">
-              <h4 className="text-2xl font-bold text-[#0F172A] mb-2">Agresiva</h4>
-              <p className="text-slate-600 mb-6">Mayor potencial de crecimiento con perfil de alto riesgo.</p>
-              <div className="space-y-3">
+              <div className="inline-block bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-xs font-semibold mb-4">Ganancias Colaborativas</div>
+              <h4 className="text-2xl font-bold text-[#0F172A] mb-2">InCruises</h4>
+              <p className="text-slate-600 mb-6">Modelo de ganancias colaborativas en travel rewards club con membresías mensuales flexibles.</p>
+              <div className="space-y-3 mb-6">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-[#0F766E]" />
-                  <span className="text-sm text-slate-600">Depósito mínimo: $2,000</span>
+                  <span className="text-sm text-slate-600">Desde $50 USD/mes</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-[#0F766E]" />
-                  <span className="text-sm text-slate-600">Riesgo: Alto</span>
+                  <span className="text-sm text-slate-600">Travel rewards + ingresos</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-[#0F766E]" />
-                  <span className="text-sm text-slate-600">Plazo: 12+ meses</span>
+                  <span className="text-sm text-slate-600">Comunidad global</span>
                 </div>
               </div>
+              <p className="text-xs text-slate-500 italic">Requiere activación por equipo Inverfact tras educación inicial</p>
+            </div>
+
+            {/* Trii */}
+            <div className="bg-white border border-slate-200 p-8 rounded-2xl shadow-sm hover:shadow-lg transition-all">
+              <div className="inline-block bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-xs font-semibold mb-4">Acciones · Fondos</div>
+              <h4 className="text-2xl font-bold text-[#0F172A] mb-2">Trii</h4>
+              <p className="text-slate-600 mb-6">Inversión en acciones y fondos de la Bolsa de Valores de Colombia con acompañamiento educativo.</p>
+              <div className="space-y-3 mb-6">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-[#0F766E]" />
+                  <span className="text-sm text-slate-600">Desde $30 USD</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-[#0F766E]" />
+                  <span className="text-sm text-slate-600">Bolsa de valores Colombia</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-[#0F766E]" />
+                  <span className="text-sm text-slate-600">Educación sólida incluida</span>
+                </div>
+              </div>
+              <p className="text-xs text-slate-500 italic">Requiere activación por equipo Inverfact tras educación inicial</p>
+            </div>
+
+            {/* InverPulse - Próximamente */}
+            <div className="bg-gradient-to-br from-slate-100 to-slate-50 border-2 border-dashed border-slate-300 p-8 rounded-2xl relative overflow-hidden">
+              <div className="absolute top-4 right-4">
+                <Zap className="h-8 w-8 text-slate-400" />
+              </div>
+              <div className="inline-block bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-semibold mb-4">Próximamente</div>
+              <h4 className="text-2xl font-bold text-[#0F172A] mb-2">InverPulse</h4>
+              <p className="text-slate-600 mb-6">Plataforma broker propia de A&O Ecosystem. Modelo similar a Grupo GT con tecnología propietaria.</p>
+              <div className="space-y-3 mb-6">
+                <div className="flex items-center gap-2">
+                  <div className="h-5 w-5 rounded-full bg-slate-300"></div>
+                  <span className="text-sm text-slate-500">Trading avanzado</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="h-5 w-5 rounded-full bg-slate-300"></div>
+                  <span className="text-sm text-slate-500">Tecnología propietaria</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="h-5 w-5 rounded-full bg-slate-300"></div>
+                  <span className="text-sm text-slate-500">Listo para producción</span>
+                </div>
+              </div>
+              <p className="text-xs text-slate-500 italic">En proceso de términos legales para operación</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* TRANSPARENCIA */}
-      <section id="transparencia" className="py-24 bg-white">
+      {/* COMUNIDAD */}
+      <section id="comunidad" className="py-24 bg-slate-50">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="relative h-[500px]">
-              <img src={CHART_IMAGE} alt="Gráficas financieras" className="absolute inset-0 w-full h-full object-cover rounded-2xl shadow-xl" />
+              <img src={CHART_IMAGE} alt="Comunidad de inversores" className="absolute inset-0 w-full h-full object-cover rounded-2xl shadow-xl" />
             </div>
             <div>
-              <h3 className="text-4xl lg:text-5xl font-bold text-[#0F172A] mb-6 tracking-tight">Transparencia y Trazabilidad</h3>
+              <h3 className="text-4xl lg:text-5xl font-bold text-[#0F172A] mb-6 tracking-tight">Comunidad de Crecimiento</h3>
               <div className="space-y-6">
                 <div className="flex gap-4">
                   <Shield className="h-8 w-8 text-[#0F766E] flex-shrink-0" />
                   <div>
-                    <h4 className="text-xl font-bold text-[#0F172A] mb-2">Sin Promesas Irreales</h4>
-                    <p className="text-slate-600">No garantizamos rendimientos fijos. Toda inversión implica riesgos reales.</p>
+                    <h4 className="text-xl font-bold text-[#0F172A] mb-2">Educación ANTES de Invertir</h4>
+                    <p className="text-slate-600">Metodología sólida comprobada por 10,300+ personas a nivel mundial.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <FileText className="h-8 w-8 text-[#0F766E] flex-shrink-0" />
                   <div>
-                    <h4 className="text-xl font-bold text-[#0F172A] mb-2">Documentación Legal</h4>
-                    <p className="text-slate-600">Todos los términos, riesgos y disclaimers claramente documentados.</p>
+                    <h4 className="text-xl font-bold text-[#0F172A] mb-2">Acompañamiento Continuo</h4>
+                    <p className="text-slate-600">No estás solo. Te acompañamos en cada paso de tu proceso de inversión.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <DollarSign className="h-8 w-8 text-[#0F766E] flex-shrink-0" />
                   <div>
-                    <h4 className="text-xl font-bold text-[#0F172A] mb-2">Trazabilidad Completa</h4>
-                    <p className="text-slate-600">Rastrea cada movimiento de tu inversión desde tu dashboard.</p>
+                    <h4 className="text-xl font-bold text-[#0F172A] mb-2">Capital Sostenible</h4>
+                    <p className="text-slate-600">Enfoque en crecimiento a largo plazo, no promesas de riqueza rápida.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <Users className="h-8 w-8 text-[#0F766E] flex-shrink-0" />
                   <div>
-                    <h4 className="text-xl font-bold text-[#0F172A] mb-2">Modelo de Referidos</h4>
-                    <p className="text-slate-600">Los impulsadores de NomadHive reciben bonos al referir inversores.</p>
+                    <h4 className="text-xl font-bold text-[#0F172A] mb-2">Sistema de Referidos</h4>
+                    <p className="text-slate-600">Los impulsadores de NomadHive reciben bonos al referir inversores activos.</p>
                   </div>
                 </div>
               </div>
@@ -227,29 +255,30 @@ function LandingInverfact() {
       </section>
 
       {/* DISCLAIMER */}
-      <section className="py-16 bg-red-50 border-y border-red-200">
+      <section className="py-16 bg-yellow-50 border-y border-yellow-200">
         <div className="max-w-4xl mx-auto px-6">
-          <h4 className="font-bold text-red-900 mb-4 text-xl">⚠️ Disclaimers Importantes</h4>
-          <ul className="space-y-2 text-sm text-red-800">
-            <li className="flex gap-2"><span>•</span><span>Inverfact es una plataforma experimental en fase inicial de desarrollo tecnológico.</span></li>
-            <li className="flex gap-2"><span>•</span><span>No somos una institución financiera regulada. Consulta a un asesor profesional.</span></li>
-            <li className="flex gap-2"><span>•</span><span>No garantizamos rendimientos. Los resultados pasados no garantizan resultados futuros.</span></li>
-            <li className="flex gap-2"><span>•</span><span>Toda inversión conlleva riesgos de pérdida parcial o total del capital.</span></li>
-            <li className="flex gap-2"><span>•</span><span>Lee completamente los términos y condiciones antes de invertir.</span></li>
-          </ul>
+          <div className="flex gap-4 items-start">
+            <AlertTriangle className="h-6 w-6 text-yellow-700 flex-shrink-0 mt-1" />
+            <div>
+              <h4 className="font-bold text-yellow-900 mb-2">Advertencia Importante</h4>
+              <p className="text-sm text-yellow-800">
+                <strong>Inverfact es una comunidad educativa, no una institución financiera.</strong> No recibimos dinero de inversores. Te educamos y acompañamos para que inviertas directamente en las plataformas oficiales (Grupo GT, InCruises, Trii). Toda inversión implica riesgos. Los resultados pasados no garantizan resultados futuros. Consulta con un asesor profesional antes de invertir.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* CTA */}
       <section className="py-24 bg-[#0F172A] text-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h3 className="text-4xl lg:text-5xl font-bold mb-6 tracking-tight">¿Listo para Invertir?</h3>
+          <h3 className="text-4xl lg:text-5xl font-bold mb-6 tracking-tight">¿Listo para Aprender?</h3>
           <p className="text-xl text-slate-300 mb-8">
-            Únete a Inverfact y accede a estrategias de inversión estructuradas con total transparencia.
+            Únete a la comunidad Inverfact y comienza tu camino hacia capital sostenible con educación sólida.
           </p>
           <Link to="/register">
             <Button data-testid="inverfact-footer-cta" size="lg" className="bg-white text-[#0F172A] hover:bg-slate-100 rounded-lg px-8 py-6 text-lg font-semibold">
-              Registrarse en Inverfact
+              Unirme a la Comunidad
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
@@ -262,7 +291,7 @@ function LandingInverfact() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <h4 className="font-bold text-[#0F172A] mb-4 text-lg">Inverfact</h4>
-              <p className="text-slate-600 text-sm">Parte del ecosistema A&O. Plataforma de inversión estructurada con modelo de referidos.</p>
+              <p className="text-slate-600 text-sm">Parte del ecosistema A&O. Comunidad de educación financiera para crear capital sostenible.</p>
             </div>
             <div>
               <h4 className="font-bold text-[#0F172A] mb-4 text-lg">Enlaces</h4>
@@ -274,7 +303,8 @@ function LandingInverfact() {
             </div>
             <div>
               <h4 className="font-bold text-[#0F172A] mb-4 text-lg">Contacto</h4>
-              <p className="text-slate-600 text-sm">jaimesblandon.adrianfelipe@gmail.com</p>
+              <p className="text-slate-600 text-sm">inverfactcol@gmail.com</p>
+              <p className="text-slate-600 text-sm mt-2">infoayo.ecosistema@gmail.com</p>
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-slate-200 text-center text-sm text-slate-600">
