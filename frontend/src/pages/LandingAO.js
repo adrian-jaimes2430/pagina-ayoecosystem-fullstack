@@ -104,7 +104,7 @@ function LandingAO() {
             <div className="bg-white border border-slate-100 shadow-sm hover:shadow-lg transition-all p-8 rounded-2xl card-hover">
               <Package className="h-12 w-12 text-[#0F766E] mb-4" />
               <h4 className="text-2xl font-bold text-[#0F172A] mb-3">ANMA Soluciones</h4>
-              <p className="text-slate-600 mb-6">Dropshipping, e-commerce y ventas digitales con modelo de impulsadores y trabajo remoto.</p>
+              <p className="text-slate-600 mb-6">Centro de e-commerce y dropshipping. Productos trending en salud, belleza, temporada y virales.</p>
               <Link to="/anma">
                 <Button data-testid="anma-card-btn" className="bg-[#0F766E] hover:bg-[#0D5F58] text-white rounded-lg w-full">
                   Conocer ANMA
@@ -116,7 +116,7 @@ function LandingAO() {
             <div className="bg-white border border-slate-100 shadow-sm hover:shadow-lg transition-all p-8 rounded-2xl card-hover opacity-60">
               <Users className="h-12 w-12 text-slate-400 mb-4" />
               <h4 className="text-2xl font-bold text-[#0F172A] mb-3">NomadHive</h4>
-              <p className="text-slate-600 mb-6">Plataforma de trabajo remoto por impulso de marca, basada en desempeño y tareas.</p>
+              <p className="text-slate-600 mb-6">Plataforma de trabajo remoto con modelo de impulsadores. Gana comisiones vendiendo productos ANMA.</p>
               <Button disabled className="bg-slate-300 text-slate-500 rounded-lg w-full cursor-not-allowed">
                 Próximamente
               </Button>
