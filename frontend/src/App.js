@@ -6,6 +6,7 @@ import LandingAO from '@/pages/LandingAO';
 import LandingANMA from '@/pages/LandingANMA';
 import LandingNomadHive from '@/pages/LandingNomadHive';
 import LandingInverfact from '@/pages/LandingInverfact';
+import LandingInverPulse from '@/pages/LandingInverPulse';
 import TiendaANMA from '@/pages/TiendaANMA';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
@@ -31,6 +32,7 @@ function AppRouter() {
       <Route path="/anma/tienda" element={<TiendaANMA />} />
       <Route path="/nomadhive" element={<LandingNomadHive />} />
       <Route path="/inverfact" element={<LandingInverfact />} />
+      <Route path="/inverpulse" element={<LandingInverPulse />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/terminos" element={<Terminos />} />
