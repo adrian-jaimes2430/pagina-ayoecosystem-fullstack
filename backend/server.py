@@ -142,6 +142,17 @@ class NomadHiveReward(BaseModel):
     category: str  # "product", "cash", "experience"
     is_available: bool = True
 
+class Notification(BaseModel):
+    notification_id: str
+    user_id: str
+    title: str
+    message: str
+    notification_type: str  # "level_up", "kyc_approved", "task_completed", "reward_redeemed", "strategy_activated", "deposit_confirmed"
+    icon: str = "bell"
+    is_read: bool = False
+    link: Optional[str] = None
+    created_at: datetime
+
 # AUTH HELPER
 async def get_current_user(request: Request, session_token: Optional[str] = Cookie(None)) -> User:
     token = session_token
