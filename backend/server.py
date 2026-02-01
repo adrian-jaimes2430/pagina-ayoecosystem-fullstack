@@ -558,6 +558,158 @@ async def send_email(email_request: EmailRequest):
         logger.error(f"Failed to send email: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to send email: {str(e)}")
 
+# ==================== INVERFACT ENDPOINTS ====================
+INVERFACT_STRATEGIES = [
+    {"strategy_id": "gt_kwnex", "name": "Grupo GT - KWNEX", "description": "Trading + Blockchain", "min_deposit": 100, "category": "trading"},
+    {"strategy_id": "incruises", "name": "InCruises", "description": "Travel rewards + ganancias colaborativas", "min_deposit": 50, "category": "travel"},
+    {"strategy_id": "trii", "name": "Trii", "description": "Acciones Bolsa de Valores Colombia", "min_deposit": 30, "category": "stocks"},
+    {"strategy_id": "inverpulse", "name": "InverPulse", "description": "Broker propio A&O - Trading avanzado", "min_deposit": 100, "category": "broker"}
+]
+
+@api_router.get("/inverfact/strategies")
+async def get_inverfact_strategies():
+    """Get all available Inverfact investment strategies"""
+    return {"strategies": INVERFACT_STRATEGIES}
+
+@api_router.get("/inverfact/user/strategies")
+async def get_user_inverfact_strategies(current_user: User = Depends(get_current_user)):
+    """Get strategies activated for the current user"""
+    user_strategies = await db.inverfact_user_strategies.find(
+        {"user_id": current_user.user_id, "is_active": True},
+        {"_id": 0}
+    ).to_list(100)
+    
+    # Enrich with strategy details
+    enriched = []
+    for us in user_strategies:
+        strategy_info = next((s for s in INVERFACT_STRATEGIES if s["strategy_id"] == us["strategy_id"]), None)
+        if strategy_info:
+            enriched.append({**us, **strategy_info})
+    
+    return {"strategies": enriched, "count": len(enriched), "has_active_strategies": len(enriched) > 0}
+
+@api_router.post("/inverfact/admin/users/{user_id}/strategies")
+async def activate_user_strategy(user_id: str, request: Request, current_user: User = Depends(get_current_user)):
+    """Admin: Activate a strategy for a user"""
+    if current_user.role != UserRole.SUPER_ADMIN:
+        raise HTTPException(status_code=403, detail="No autorizado")
+    
+    data = await request.json()
+    strategy_id = data.get("strategy_id")
+    
+    # Validate strategy exists
+    if not any(s["strategy_id"] == strategy_id for s in INVERFACT_STRATEGIES):
+        raise HTTPException(status_code=400, detail="Estrategia no válida")
+    
+    # Check if user exists
+    user = await db.users.find_one({"user_id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    # Check if already activated
+    existing = await db.inverfact_user_strategies.find_one({"user_id": user_id, "strategy_id": strategy_id})
+    if existing:
+        await db.inverfact_user_strategies.update_one(
+            {"user_id": user_id, "strategy_id": strategy_id},
+            {"$set": {"is_active": True, "updated_at": datetime.now(timezone.utc).isoformat()}}
+        )
+        return {"message": "Estrategia reactivada exitosamente"}
+    
+    # Create new activation
+    activation_doc = {
+        "user_id": user_id,
+        "strategy_id": strategy_id,
+        "is_active": True,
+        "activated_by": current_user.user_id,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "updated_at": datetime.now(timezone.utc).isoformat()
+    }
+    await db.inverfact_user_strategies.insert_one(activation_doc)
+    
+    return {"message": "Estrategia activada exitosamente"}
+
+@api_router.delete("/inverfact/admin/users/{user_id}/strategies/{strategy_id}")
+async def deactivate_user_strategy(user_id: str, strategy_id: str, current_user: User = Depends(get_current_user)):
+    """Admin: Deactivate a strategy for a user"""
+    if current_user.role != UserRole.SUPER_ADMIN:
+        raise HTTPException(status_code=403, detail="No autorizado")
+    
+    result = await db.inverfact_user_strategies.update_one(
+        {"user_id": user_id, "strategy_id": strategy_id},
+        {"$set": {"is_active": False, "updated_at": datetime.now(timezone.utc).isoformat()}}
+    )
+    
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Activación no encontrada")
+    
+    return {"message": "Estrategia desactivada exitosamente"}
+
+@api_router.get("/inverfact/admin/users-strategies")
+async def get_all_users_strategies(current_user: User = Depends(get_current_user)):
+    """Admin: Get all users with their strategy activations"""
+    if current_user.role != UserRole.SUPER_ADMIN:
+        raise HTTPException(status_code=403, detail="No autorizado")
+    
+    users = await db.users.find({}, {"_id": 0, "password": 0}).to_list(1000)
+    
+    for user in users:
+        strategies = await db.inverfact_user_strategies.find(
+            {"user_id": user["user_id"], "is_active": True},
+            {"_id": 0}
+        ).to_list(100)
+        user["active_strategies"] = strategies
+        if isinstance(user.get('created_at'), str):
+            user['created_at'] = datetime.fromisoformat(user['created_at'])
+    
+    return {"users": users}
+
+@api_router.post("/inverfact/contact")
+async def send_inverfact_contact(contact_form: InverfactContactForm):
+    """Send contact form to Inverfact team"""
+    INVERFACT_EMAIL = "inverfactcol@gmail.com"
+    
+    html_content = f"""
+    <h2>Nuevo Contacto Inverfact</h2>
+    <p><strong>Nombre:</strong> {contact_form.name}</p>
+    <p><strong>Email:</strong> {contact_form.email}</p>
+    <p><strong>Teléfono:</strong> {contact_form.phone or 'No proporcionado'}</p>
+    <p><strong>Estrategia de interés:</strong> {contact_form.interested_strategy or 'No especificada'}</p>
+    <hr>
+    <p><strong>Mensaje:</strong></p>
+    <p>{contact_form.message}</p>
+    <hr>
+    <p style="font-size: 12px; color: #666;">Este mensaje fue enviado desde el formulario de contacto de Inverfact - A&O Ecosistema</p>
+    """
+    
+    # Store contact in database
+    contact_doc = {
+        "contact_id": f"contact_{uuid.uuid4().hex[:12]}",
+        "name": contact_form.name,
+        "email": contact_form.email,
+        "phone": contact_form.phone,
+        "message": contact_form.message,
+        "interested_strategy": contact_form.interested_strategy,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    await db.inverfact_contacts.insert_one(contact_doc)
+    
+    # Try to send email (but don't fail if Resend is not configured)
+    try:
+        if RESEND_API_KEY and RESEND_API_KEY != "re_placeholder_get_from_user":
+            params = {
+                "from": SENDER_EMAIL,
+                "to": [INVERFACT_EMAIL],
+                "subject": f"Nuevo Contacto Inverfact: {contact_form.name}",
+                "html": html_content
+            }
+            await asyncio.to_thread(resend.Emails.send, params)
+            return {"status": "success", "message": "Mensaje enviado exitosamente. El equipo Inverfact te contactará pronto."}
+        else:
+            return {"status": "success", "message": "Mensaje recibido. El equipo Inverfact te contactará pronto.", "note": "Email service pending configuration"}
+    except Exception as e:
+        logger.warning(f"Could not send email: {str(e)}")
+        return {"status": "success", "message": "Mensaje recibido. El equipo Inverfact te contactará pronto."}
+
 # USERS MANAGEMENT
 @api_router.get("/users", response_model=List[User])
 async def get_users(current_user: User = Depends(get_current_user)):
