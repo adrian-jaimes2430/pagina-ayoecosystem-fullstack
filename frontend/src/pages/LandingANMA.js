@@ -34,11 +34,11 @@ function LandingANMA() {
                 E-commerce & Dropshipping
               </div>
               <h2 className="text-5xl lg:text-6xl font-bold text-[#0F172A] leading-tight tracking-tight mb-6">
-                Vende sin Inventario
-                <span className="block text-[#0F766E] mt-2">Gana Comisiones</span>
+                Tu Tienda de
+                <span className="block text-[#0F766E] mt-2">Productos Trending</span>
               </h2>
               <p className="text-lg text-slate-600 mb-8 leading-relaxed">
-                ANMA Soluciones es tu plataforma de dropshipping profesional. Vende productos de hogar, bienestar y tecnología sin necesidad de inventario. Gana comisiones por cada venta.
+                ANMA Soluciones es tu centro de dropshipping y e-commerce. Descubre productos de salud, belleza, temporada y virales. Compra directo sin intermediarios.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/anma/tienda">
