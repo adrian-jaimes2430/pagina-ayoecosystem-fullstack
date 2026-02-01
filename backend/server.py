@@ -627,6 +627,304 @@ async def get_dashboard_stats(current_user: User = Depends(get_current_user)):
             "total_orders": len(my_orders)
         }
 
+# ==================== INVERPULSE ENDPOINTS ====================
+from inverpulse_models import (
+    InverPulseLevel, KYCStatus, InversorInverPulse, InversorDeposit, 
+    TradingSignal, KYCRequest, LevelRequirements, check_level_eligibility
+)
+
+# INVERPULSE - Registro de inversor
+@api_router.post("/inverpulse/register")
+async def register_inverpulse_investor(request: Request, current_user: User = Depends(get_current_user)):
+    data = await request.json()
+    referred_by_code = data.get("referral_code")
+    
+    # Verificar si ya está registrado
+    existing = await db.inversores_inverpulse.find_one({"user_id": current_user.user_id})
+    if existing:
+        raise HTTPException(status_code=400, detail="Ya estás registrado en InverPulse")
+    
+    # Generar código de referido único
+    referral_code = f"IP{uuid.uuid4().hex[:8].upper()}"
+    
+    inversor_id = f"inv_{uuid.uuid4().hex[:12]}"
+    inversor_doc = {
+        "inversor_id": inversor_id,
+        "user_id": current_user.user_id,
+        "email": current_user.email,
+        "name": current_user.name,
+        "level": InverPulseLevel.HIERRO,
+        "total_deposit": 0.0,
+        "total_profit": 0.0,
+        "kyc_status": KYCStatus.PENDING,
+        "kyc_documents": None,
+        "referral_code": referral_code,
+        "referred_by": None,
+        "direct_referrals": [],
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "updated_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    # Si hay código de referido, agregar a la red
+    if referred_by_code:
+        referrer = await db.inversores_inverpulse.find_one({"referral_code": referred_by_code}, {"_id": 0})
+        if referrer:
+            inversor_doc["referred_by"] = referrer["inversor_id"]
+            # Agregar a la lista de referidos directos del referidor
+            await db.inversores_inverpulse.update_one(
+                {"inversor_id": referrer["inversor_id"]},
+                {"$push": {"direct_referrals": inversor_id}}
+            )
+    
+    await db.inversores_inverpulse.insert_one(inversor_doc)
+    
+    return {"message": "Registrado exitosamente en InverPulse", "inversor_id": inversor_id, "referral_code": referral_code}
+
+# INVERPULSE - Obtener perfil del inversor
+@api_router.get("/inverpulse/profile")
+async def get_inverpulse_profile(current_user: User = Depends(get_current_user)):
+    inversor = await db.inversores_inverpulse.find_one({"user_id": current_user.user_id}, {"_id": 0})
+    if not inversor:
+        raise HTTPException(status_code=404, detail="No estás registrado en InverPulse")
+    
+    # Obtener requirements del nivel actual
+    requirements = LevelRequirements.get_requirements(inversor["level"])
+    
+    # Contar referidos activos
+    direct_referrals_data = []
+    for ref_id in inversor.get("direct_referrals", []):
+        ref = await db.inversores_inverpulse.find_one({"inversor_id": ref_id}, {"_id": 0, "name": 1, "level": 1, "total_deposit": 1, "kyc_status": 1})
+        if ref:
+            direct_referrals_data.append(ref)
+    
+    inversor["direct_referrals_data"] = direct_referrals_data
+    inversor["level_requirements"] = requirements
+    
+    return inversor
+
+# INVERPULSE - Crear depósito
+@api_router.post("/inverpulse/deposits")
+async def create_inverpulse_deposit(request: Request, current_user: User = Depends(get_current_user)):
+    data = await request.json()
+    amount = data.get("amount")
+    
+    if not amount or amount < 100:
+        raise HTTPException(status_code=400, detail="Depósito mínimo es $100")
+    
+    inversor = await db.inversores_inverpulse.find_one({"user_id": current_user.user_id}, {"_id": 0})
+    if not inversor:
+        raise HTTPException(status_code=404, detail="No estás registrado en InverPulse")
+    
+    deposit_id = f"dep_{uuid.uuid4().hex[:12]}"
+    deposit_doc = {
+        "deposit_id": deposit_id,
+        "inversor_id": inversor["inversor_id"],
+        "amount": amount,
+        "currency": "USD",
+        "status": "pending",
+        "transaction_hash": None,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.inverpulse_deposits.insert_one(deposit_doc)
+    
+    return {"message": "Depósito registrado. Pendiente de confirmación.", "deposit_id": deposit_id}
+
+# INVERPULSE - Confirmar depósito (ADMIN)
+@api_router.post("/inverpulse/deposits/{deposit_id}/confirm")
+async def confirm_inverpulse_deposit(deposit_id: str, request: Request, current_user: User = Depends(get_current_user)):
+    if current_user.role != UserRole.SUPER_ADMIN:
+        raise HTTPException(status_code=403, detail="No autorizado")
+    
+    data = await request.json()
+    transaction_hash = data.get("transaction_hash")
+    
+    deposit = await db.inverpulse_deposits.find_one({"deposit_id": deposit_id}, {"_id": 0})
+    if not deposit:
+        raise HTTPException(status_code=404, detail="Depósito no encontrado")
+    
+    # Actualizar depósito
+    await db.inverpulse_deposits.update_one(
+        {"deposit_id": deposit_id},
+        {"$set": {"status": "confirmed", "transaction_hash": transaction_hash}}
+    )
+    
+    # Actualizar total_deposit del inversor
+    await db.inversores_inverpulse.update_one(
+        {"inversor_id": deposit["inversor_id"]},
+        {
+            "$inc": {"total_deposit": deposit["amount"]},
+            "$set": {"updated_at": datetime.now(timezone.utc).isoformat()}
+        }
+    )
+    
+    # Verificar y actualizar nivel si corresponde
+    inversor = await db.inversores_inverpulse.find_one({"inversor_id": deposit["inversor_id"]}, {"_id": 0})
+    new_level = await LevelRequirements.check_level_eligibility(inversor, db)
+    
+    if new_level != inversor["level"]:
+        await db.inversores_inverpulse.update_one(
+            {"inversor_id": deposit["inversor_id"]},
+            {"$set": {"level": new_level}}
+        )
+    
+    return {"message": "Depósito confirmado y nivel actualizado"}
+
+# INVERPULSE - Submit KYC
+@api_router.post("/inverpulse/kyc/submit")
+async def submit_inverpulse_kyc(kyc_data: KYCRequest, current_user: User = Depends(get_current_user)):
+    inversor = await db.inversores_inverpulse.find_one({"user_id": current_user.user_id}, {"_id": 0})
+    if not inversor:
+        raise HTTPException(status_code=404, detail="No estás registrado en InverPulse")
+    
+    kyc_doc = {
+        "document_type": kyc_data.document_type,
+        "document_number": kyc_data.document_number,
+        "document_front_url": kyc_data.document_front_url,
+        "document_back_url": kyc_data.document_back_url,
+        "selfie_url": kyc_data.selfie_url,
+        "submitted_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.inversores_inverpulse.update_one(
+        {"inversor_id": inversor["inversor_id"]},
+        {"$set": {"kyc_documents": kyc_doc, "kyc_status": KYCStatus.PENDING}}
+    )
+    
+    return {"message": "KYC enviado. Pendiente de revisión."}
+
+# INVERPULSE - Aprobar/Rechazar KYC (ADMIN)
+@api_router.post("/inverpulse/kyc/{inversor_id}/review")
+async def review_inverpulse_kyc(inversor_id: str, request: Request, current_user: User = Depends(get_current_user)):
+    if current_user.role != UserRole.SUPER_ADMIN:
+        raise HTTPException(status_code=403, detail="No autorizado")
+    
+    data = await request.json()
+    status = data.get("status")  # "approved" or "rejected"
+    
+    if status not in ["approved", "rejected"]:
+        raise HTTPException(status_code=400, detail="Status inválido")
+    
+    await db.inversores_inverpulse.update_one(
+        {"inversor_id": inversor_id},
+        {"$set": {"kyc_status": status}}
+    )
+    
+    return {"message": f"KYC {status}"}
+
+# INVERPULSE - Crear señal de trading (ADMIN)
+@api_router.post("/inverpulse/signals")
+async def create_trading_signal(request: Request, current_user: User = Depends(get_current_user)):
+    if current_user.role != UserRole.SUPER_ADMIN:
+        raise HTTPException(status_code=403, detail="No autorizado")
+    
+    data = await request.json()
+    
+    signal_id = f"sig_{uuid.uuid4().hex[:12]}"
+    expires_hours = data.get("expires_hours", 24)
+    
+    signal_doc = {
+        "signal_id": signal_id,
+        "created_by": current_user.user_id,
+        "signal_type": data["signal_type"],
+        "asset": data["asset"],
+        "entry_price": data["entry_price"],
+        "target_price": data["target_price"],
+        "stop_loss": data["stop_loss"],
+        "min_level_required": data.get("min_level_required", InverPulseLevel.HIERRO),
+        "status": "active",
+        "result": None,
+        "notes": data.get("notes"),
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "expires_at": (datetime.now(timezone.utc) + timedelta(hours=expires_hours)).isoformat()
+    }
+    
+    await db.inverpulse_signals.insert_one(signal_doc)
+    
+    return {"message": "Señal creada exitosamente", "signal_id": signal_id}
+
+# INVERPULSE - Obtener señales según nivel del inversor
+@api_router.get("/inverpulse/signals")
+async def get_trading_signals(current_user: User = Depends(get_current_user)):
+    inversor = await db.inversores_inverpulse.find_one({"user_id": current_user.user_id}, {"_id": 0})
+    if not inversor:
+        raise HTTPException(status_code=404, detail="No estás registrado en InverPulse")
+    
+    # Obtener señales activas según nivel
+    level_hierarchy = [
+        InverPulseLevel.HIERRO, InverPulseLevel.COBRE, InverPulseLevel.BRONCE,
+        InverPulseLevel.PLATA, InverPulseLevel.ORO, InverPulseLevel.PLATINO,
+        InverPulseLevel.DIAMANTE, InverPulseLevel.ZAFIRO, InverPulseLevel.RUBI
+    ]
+    
+    inversor_level_index = level_hierarchy.index(inversor["level"])
+    accessible_levels = level_hierarchy[:inversor_level_index + 1]
+    
+    signals = await db.inverpulse_signals.find(
+        {
+            "status": "active",
+            "min_level_required": {"$in": accessible_levels}
+        },
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(100)
+    
+    return {"signals": signals, "count": len(signals)}
+
+# INVERPULSE - Actualizar nivel manualmente (ADMIN)
+@api_router.post("/inverpulse/investors/{inversor_id}/update-level")
+async def update_investor_level(inversor_id: str, request: Request, current_user: User = Depends(get_current_user)):
+    if current_user.role != UserRole.SUPER_ADMIN:
+        raise HTTPException(status_code=403, detail="No autorizado")
+    
+    data = await request.json()
+    new_level = data.get("level")
+    
+    if new_level not in [l.value for l in InverPulseLevel]:
+        raise HTTPException(status_code=400, detail="Nivel inválido")
+    
+    await db.inversores_inverpulse.update_one(
+        {"inversor_id": inversor_id},
+        {"$set": {"level": new_level, "updated_at": datetime.now(timezone.utc).isoformat()}}
+    )
+    
+    return {"message": f"Nivel actualizado a {new_level}"}
+
+# INVERPULSE - Listar todos los inversores (ADMIN)
+@api_router.get("/inverpulse/investors")
+async def list_inverpulse_investors(current_user: User = Depends(get_current_user)):
+    if current_user.role != UserRole.SUPER_ADMIN:
+        raise HTTPException(status_code=403, detail="No autorizado")
+    
+    investors = await db.inversores_inverpulse.find({}, {"_id": 0}).to_list(1000)
+    
+    return {"investors": investors, "count": len(investors)}
+
+# INVERPULSE - Ver depósitos pendientes (ADMIN)
+@api_router.get("/inverpulse/deposits/pending")
+async def list_pending_deposits(current_user: User = Depends(get_current_user)):
+    if current_user.role != UserRole.SUPER_ADMIN:
+        raise HTTPException(status_code=403, detail="No autorizado")
+    
+    deposits = await db.inverpulse_deposits.find({"status": "pending"}, {"_id": 0}).sort("created_at", -1).to_list(1000)
+    
+    # Enriquecer con información del inversor
+    for deposit in deposits:
+        inversor = await db.inversores_inverpulse.find_one({"inversor_id": deposit["inversor_id"]}, {"_id": 0, "name": 1, "email": 1, "level": 1})
+        if inversor:
+            deposit["inversor_info"] = inversor
+    
+    return {"deposits": deposits, "count": len(deposits)}
+
+# INVERPULSE - Ver KYC pendientes (ADMIN)
+@api_router.get("/inverpulse/kyc/pending")
+async def list_pending_kyc(current_user: User = Depends(get_current_user)):
+    if current_user.role != UserRole.SUPER_ADMIN:
+        raise HTTPException(status_code=403, detail="No autorizado")
+    
+    pending_kyc = await db.inversores_inverpulse.find({"kyc_status": "pending"}, {"_id": 0}).to_list(1000)
+    
+    return {"pending_kyc": pending_kyc, "count": len(pending_kyc)}
+
 app.include_router(api_router)
 
 app.add_middleware(
