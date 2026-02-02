@@ -24,9 +24,15 @@ except ImportError:
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-mongo_url = os.environ['MONGO_URL']
+mongo_url = os.environ.get("MONGO_URL")
+db_name = os.environ.get("DB_NAME")
+
+if not mongo_url or not db_name:
+    raise RuntimeError("MONGO_URL and DB_NAME must be set as environment variables")
+
 client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+db = client[db_name]
+
 
 JWT_SECRET = os.environ.get('JWT_SECRET', 'default_secret_key')
 STRIPE_API_KEY = os.environ.get('STRIPE_API_KEY')
