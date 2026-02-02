@@ -561,26 +561,24 @@ async def stripe_webhook(request: Request):
 # LUCIDBOT CHAT
 @api_router.post("/chat")
 async def chat_with_lucibot(message: ChatMessage):
-    # Si Emergent no está disponible (Railway), no rompemos el backend
-    if not EMERGENT_AVAILABLE:
-        return {
-            "response": "🤖 LucidBot está temporalmente fuera de servicio. Estamos trabajando para activarlo muy pronto.",
-            "session_id": message.session_id
-        }
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(
+            status_code=503,
+            detail="Servicio de chat no disponible temporalmente"
+        )
 
     try:
         session_id = message.session_id or f"session_{uuid.uuid4().hex[:8]}"
+
+        from emergentintegrations.llm.chat import LlmChat, UserMessage
 
         chat = LlmChat(
             api_key=EMERGENT_LLM_KEY,
             session_id=session_id,
             system_message=(
-                "Eres Sara, asistente de ANMA Soluciones - el centro de "
-                "e-commerce y dropshipping del Ecosistema A&O. Ayudas a los clientes "
-                "con información sobre productos (salud, belleza, temporada, virales), "
-                "pedidos, envíos y pagos. Eres amable, profesional y enfocado en resolver "
-                "dudas de compra. IMPORTANTE: ANMA NO tiene modelo de impulsadores ni "
-                "comisiones, eso es de NomadHive (otra sub-marca). ANMA es solo tienda online."
+                "Eres LucidBot, asistente de ANMA Soluciones - el centro de "
+                "e-commerce y dropshipping del Ecosistema A&O. Ayudas a los "
+                "clientes con información sobre productos, pedidos, envíos y pagos."
             )
         ).with_model("openai", "gpt-5.2")
 
@@ -592,12 +590,15 @@ async def chat_with_lucibot(message: ChatMessage):
             "session_id": session_id
         }
 
+    except ImportError:
+        raise HTTPException(
+            status_code=503,
+            detail="Chat IA no disponible en este entorno"
+        )
     except Exception as e:
         logger.error(f"Chat error: {str(e)}")
-        raise HTTPException(
-            status_code=500,
-            detail="Chat service error"
-        )
+        raise HTTPException(status_code=500, detail="Error interno del chat")
+
 
 
 # EMAIL
