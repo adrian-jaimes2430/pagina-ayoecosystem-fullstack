@@ -14,8 +14,12 @@ import bcrypt
 import jwt
 import asyncio
 import resend
-from emergentintegrations.payments.stripe.checkout import StripeCheckout, CheckoutSessionResponse, CheckoutStatusResponse, CheckoutSessionRequest
-from emergentintegrations.llm.chat import LlmChat, UserMessage
+try:
+    from emergentintegrations.payments.stripe.checkout import StripeCheckout
+    from emergentintegrations.llm.chat import LlmChat, UserMessage
+    EMERGENT_AVAILABLE = True
+except ImportError:
+    EMERGENT_AVAILABLE = False
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
