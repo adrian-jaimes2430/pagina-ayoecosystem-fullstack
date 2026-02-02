@@ -555,22 +555,44 @@ async def stripe_webhook(request: Request):
 # LUCIDBOT CHAT
 @api_router.post("/chat")
 async def chat_with_lucibot(message: ChatMessage):
+    # Si Emergent no está disponible (Railway), no rompemos el backend
+    if not EMERGENT_AVAILABLE:
+        return {
+            "response": "🤖 LucidBot está temporalmente fuera de servicio. Estamos trabajando para activarlo muy pronto.",
+            "session_id": message.session_id
+        }
+
     try:
         session_id = message.session_id or f"session_{uuid.uuid4().hex[:8]}"
-        
+
         chat = LlmChat(
             api_key=EMERGENT_LLM_KEY,
             session_id=session_id,
-            system_message="Eres LucidBot, asistente de ANMA Soluciones - el centro de e-commerce y dropshipping del Ecosistema A&O. Ayudas a los clientes con información sobre productos (salud, belleza, temporada, virales), pedidos, envíos y pagos. Eres amable, profesional y enfocado en resolver dudas de compra. IMPORTANTE: ANMA NO tiene modelo de impulsadores ni comisiones, eso es de NomadHive (otra sub-marca). ANMA es solo tienda online."
+            system_message=(
+                "Eres Sara, asistente de ANMA Soluciones - el centro de "
+                "e-commerce y dropshipping del Ecosistema A&O. Ayudas a los clientes "
+                "con información sobre productos (salud, belleza, temporada, virales), "
+                "pedidos, envíos y pagos. Eres amable, profesional y enfocado en resolver "
+                "dudas de compra. IMPORTANTE: ANMA NO tiene modelo de impulsadores ni "
+                "comisiones, eso es de NomadHive (otra sub-marca). ANMA es solo tienda online."
+            )
         ).with_model("openai", "gpt-5.2")
-        
+
         user_message = UserMessage(text=message.message)
         response = await chat.send_message(user_message)
-        
-        return {"response": response, "session_id": session_id}
+
+        return {
+            "response": response,
+            "session_id": session_id
+        }
+
     except Exception as e:
         logger.error(f"Chat error: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Chat error: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail="Chat service error"
+        )
+
 
 # EMAIL
 @api_router.post("/emails/send")
