@@ -291,6 +291,44 @@ async def login(credentials: UserLogin, response: Response):
     
     return {"user_id": user["user_id"], "email": user["email"], "name": user["name"], "role": user["role"], "session_token": session_token}
 
+@api_router.post("/auth/login-jwt")
+async def login_jwt(credentials: UserLogin):
+    user = await db.users.find_one({"email": credentials.email}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=401, detail="Credenciales inválidas")
+
+    if not bcrypt.checkpw(
+        credentials.password.encode("utf-8"),
+        user["password"].encode("utf-8")
+    ):
+        raise HTTPException(status_code=401, detail="Credenciales inválidas")
+
+    payload = {
+        "user_id": user["user_id"],
+        "email": user["email"],
+        "role": user["role"]
+    }
+
+    access_token = create_access_token(payload)
+    refresh_token = create_refresh_token(payload)
+
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer",
+        "user": {
+            "user_id": user["user_id"],
+            "email": user["email"],
+            "name": user["name"],
+            "role": user["role"]
+        }
+    }
+
+@api_router.get("/auth/me-jwt")
+async def get_me_jwt(current_user: User = Depends(get_current_user_jwt)):
+    return current_user
+
+
 @api_router.get("/auth/me")
 async def get_me(current_user: User = Depends(get_current_user)):
     return current_user
