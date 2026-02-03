@@ -1,3 +1,4 @@
+# ======================= IMPORTS =======================
 from fastapi import FastAPI, APIRouter, HTTPException, Depends, Request, Response, Cookie
 from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
@@ -6,53 +7,61 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr
 from typing import List, Optional, Dict, Any
 import uuid
 from datetime import datetime, timezone, timedelta
 import bcrypt
 import asyncio
 import resend
+
+# Stripe
 try:
-    from emergentintegrations.payments.stripe.checkout import StripeCheckout
+    from emergentintegrations.payments.stripe.checkout import (
+        StripeCheckout,
+        CheckoutSessionRequest
+    )
     from emergentintegrations.llm.chat import LlmChat, UserMessage
     EMERGENT_AVAILABLE = True
 except ImportError:
     EMERGENT_AVAILABLE = False
-    
+
+# JWT
 from auth.jwt_utils import (
     create_access_token,
     create_refresh_token,
     verify_token
 )
 
-
+# ======================= ENV =======================
 ROOT_DIR = Path(__file__).parent
-load_dotenv(ROOT_DIR / '.env')
+load_dotenv(ROOT_DIR / ".env")
 
-mongo_url = os.environ.get("MONGO_URL")
-db_name = os.environ.get("DB_NAME")
+IS_PROD = os.getenv("ENV") == "production"
+
+mongo_url = os.getenv("MONGO_URL")
+db_name = os.getenv("DB_NAME")
 
 if not mongo_url or not db_name:
-    raise RuntimeError("MONGO_URL and DB_NAME must be set as environment variables")
+    raise RuntimeError("MONGO_URL and DB_NAME must be set")
 
 client = AsyncIOMotorClient(mongo_url)
 db = client[db_name]
 
-
-JWT_SECRET = os.environ.get('JWT_SECRET', 'default_secret_key')
-STRIPE_API_KEY = os.environ.get('STRIPE_API_KEY')
-EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY')
-RESEND_API_KEY = os.environ.get('RESEND_API_KEY')
-SENDER_EMAIL = os.environ.get('SENDER_EMAIL', 'onboarding@resend.dev')
+STRIPE_API_KEY = os.getenv("STRIPE_API_KEY")
+EMERGENT_LLM_KEY = os.getenv("EMERGENT_LLM_KEY")
+RESEND_API_KEY = os.getenv("RESEND_API_KEY")
+SENDER_EMAIL = os.getenv("SENDER_EMAIL", "onboarding@resend.dev")
 
 resend.api_key = RESEND_API_KEY
 
+# ======================= APP =======================
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 # MODELS
 class UserRole:
