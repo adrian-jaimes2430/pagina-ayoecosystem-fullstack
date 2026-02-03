@@ -282,35 +282,11 @@ async def register(user_data: UserRegister):
     
     return {"user_id": user_id, "email": user_data.email, "name": user_data.name, "session_token": session_token}
 
-@api_router.post("/auth/login")
-async def login(credentials: UserLogin, response: Response):
-    user = await db.users.find_one({"email": credentials.email}, {"_id": 0})
-    if not user:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-    
-    if not bcrypt.checkpw(credentials.password.encode('utf-8'), user["password"].encode('utf-8')):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-    
-    session_token = f"session_{uuid.uuid4().hex}"
-    session_doc = {
-        "user_id": user["user_id"],
-        "session_token": session_token,
-        "expires_at": (datetime.now(timezone.utc) + timedelta(days=7)).isoformat(),
-        "created_at": datetime.now(timezone.utc).isoformat()
-    }
-    await db.user_sessions.insert_one(session_doc)
-    
-    response.set_cookie(
-        key="session_token",
-        value=session_token,
-        httponly=True,
-        secure=True,
-        samesite="none",
-        max_age=7*24*60*60,
-        path="/"
-    )
-    
-    return {"user_id": user["user_id"], "email": user["email"], "name": user["name"], "role": user["role"], "session_token": session_token}
+from auth.jwt_utils import (
+    create_access_token,
+    create_refresh_token
+)
+
 
 @api_router.post("/auth/login-jwt")
 async def login_jwt(credentials: UserLogin):
@@ -378,12 +354,10 @@ async def get_me(current_user: User = Depends(get_current_user)):
     return current_user
 
 @api_router.post("/auth/logout")
-async def logout(response: Response, session_token: Optional[str] = Cookie(None)):
-    if session_token:
-        await db.user_sessions.delete_one({"session_token": session_token})
-    
-    response.delete_cookie(key="session_token", path="/")
-    return {"message": "Logged out successfully"}
+async def logout(response: Response):
+    response.delete_cookie("refresh_token", path="/")
+    response.delete_cookie("session_token", path="/")
+    return {"message": "Sesión cerrada correctamente"}
 
 @api_router.post("/auth/session")
 async def process_session(request: Request, response: Response):
