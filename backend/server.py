@@ -202,6 +202,32 @@ async def get_current_user(request: Request, session_token: Optional[str] = Cook
     
     return User(**user)
 
+async def get_current_user_jwt(request: Request) -> User:
+    auth_header = request.headers.get("Authorization")
+
+    if not auth_header or not auth_header.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Token requerido")
+
+    token = auth_header.split(" ")[1]
+    payload = verify_token(token, "access")
+
+    if not payload:
+        raise HTTPException(status_code=401, detail="Token inválido o expirado")
+
+    user = await db.users.find_one(
+        {"user_id": payload["user_id"]},
+        {"_id": 0, "password": 0}
+    )
+
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    if isinstance(user.get("created_at"), str):
+        user["created_at"] = datetime.fromisoformat(user["created_at"])
+
+    return User(**user)
+
+
 # AUTH ENDPOINTS
 @api_router.post("/auth/register")
 async def register(user_data: UserRegister):
