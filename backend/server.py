@@ -340,9 +340,7 @@ async def get_me_jwt(current_user: User = Depends(get_current_user_jwt)):
     return current_user
 
 @api_router.post("/auth/refresh")
-async def refresh_token(
-    request: Request,
-    response: Response,
+async def refresh_access_token(
     refresh_token: Optional[str] = Cookie(None)
 ):
     if not refresh_token:
@@ -362,6 +360,7 @@ async def refresh_token(
         "access_token": new_access_token,
         "token_type": "bearer"
     }
+
 
 @api_router.get("/auth/me")
 async def get_me(current_user: User = Depends(get_current_user)):
