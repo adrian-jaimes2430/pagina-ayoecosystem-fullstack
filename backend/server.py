@@ -20,6 +20,13 @@ try:
     EMERGENT_AVAILABLE = True
 except ImportError:
     EMERGENT_AVAILABLE = False
+    
+from auth.jwt_utils import (
+    create_access_token,
+    create_refresh_token,
+    verify_token
+)
+
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
