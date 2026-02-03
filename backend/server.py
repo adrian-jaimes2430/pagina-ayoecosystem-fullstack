@@ -289,7 +289,10 @@ from auth.jwt_utils import (
 
 
 @api_router.post("/auth/login-jwt")
-async def login_jwt(credentials: UserLogin):
+async def login_jwt(
+    credentials: UserLogin,
+    response: Response
+):
     user = await db.users.find_one({"email": credentials.email}, {"_id": 0})
     if not user:
         raise HTTPException(status_code=401, detail="Credenciales inválidas")
@@ -309,9 +312,19 @@ async def login_jwt(credentials: UserLogin):
     access_token = create_access_token(payload)
     refresh_token = create_refresh_token(payload)
 
+    # 🔐 Cookie segura para refresh token
+    response.set_cookie(
+        key="refresh_token",
+        value=refresh_token,
+        httponly=True,
+        secure=True,
+        samesite="none",
+        max_age=REFRESH_EXPIRE_DAYS * 24 * 60 * 60,
+        path="/"
+    )
+
     return {
         "access_token": access_token,
-        "refresh_token": refresh_token,
         "token_type": "bearer",
         "user": {
             "user_id": user["user_id"],
@@ -320,6 +333,7 @@ async def login_jwt(credentials: UserLogin):
             "role": user["role"]
         }
     }
+
 
 @api_router.get("/auth/me-jwt")
 async def get_me_jwt(current_user: User = Depends(get_current_user_jwt)):
