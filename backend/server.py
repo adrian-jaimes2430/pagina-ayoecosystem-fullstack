@@ -326,28 +326,28 @@ async def get_me_jwt(current_user: User = Depends(get_current_user_jwt)):
     return current_user
 
 @api_router.post("/auth/refresh")
-async def refresh_token(request: Request):
-    data = await request.json()
-    refresh_token = data.get("refresh_token")
-
+async def refresh_token(
+    request: Request,
+    response: Response,
+    refresh_token: Optional[str] = Cookie(None)
+):
     if not refresh_token:
-        raise HTTPException(status_code=400, detail="Refresh token requerido")
+        raise HTTPException(status_code=401, detail="Refresh token requerido")
 
     payload = verify_token(refresh_token, "refresh")
     if not payload:
-        raise HTTPException(status_code=401, detail="Refresh token inválido")
+        raise HTTPException(status_code=401, detail="Refresh token inválido o expirado")
 
-    new_access = create_access_token({
+    new_access_token = create_access_token({
         "user_id": payload["user_id"],
         "email": payload["email"],
         "role": payload["role"]
     })
 
     return {
-        "access_token": new_access,
+        "access_token": new_access_token,
         "token_type": "bearer"
     }
-
 
 @api_router.get("/auth/me")
 async def get_me(current_user: User = Depends(get_current_user)):
