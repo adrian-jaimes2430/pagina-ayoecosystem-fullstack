@@ -11,7 +11,6 @@ from typing import List, Optional, Dict, Any
 import uuid
 from datetime import datetime, timezone, timedelta
 import bcrypt
-import jwt
 import asyncio
 import resend
 try:
@@ -327,6 +326,29 @@ async def login_jwt(credentials: UserLogin):
 @api_router.get("/auth/me-jwt")
 async def get_me_jwt(current_user: User = Depends(get_current_user_jwt)):
     return current_user
+
+@api_router.post("/auth/refresh")
+async def refresh_token(request: Request):
+    data = await request.json()
+    refresh_token = data.get("refresh_token")
+
+    if not refresh_token:
+        raise HTTPException(status_code=400, detail="Refresh token requerido")
+
+    payload = verify_token(refresh_token, "refresh")
+    if not payload:
+        raise HTTPException(status_code=401, detail="Refresh token inválido")
+
+    new_access = create_access_token({
+        "user_id": payload["user_id"],
+        "email": payload["email"],
+        "role": payload["role"]
+    })
+
+    return {
+        "access_token": new_access,
+        "token_type": "bearer"
+    }
 
 
 @api_router.get("/auth/me")
