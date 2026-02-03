@@ -1,18 +1,17 @@
 from datetime import datetime, timedelta, timezone
 from jose import jwt, JWTError
 import os
-from typing import Optional, Dict
 
 JWT_SECRET = os.getenv("JWT_SECRET")
-if not JWT_SECRET:
-    raise RuntimeError("JWT_SECRET not set")
-
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 ACCESS_EXPIRE_MINUTES = int(os.getenv("JWT_ACCESS_EXPIRE_MINUTES", 15))
 REFRESH_EXPIRE_DAYS = int(os.getenv("JWT_REFRESH_EXPIRE_DAYS", 7))
 
+if not JWT_SECRET:
+    raise RuntimeError("JWT_SECRET must be set")
 
-def create_access_token(data: Dict) -> str:
+
+def create_access_token(data: dict) -> str:
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_EXPIRE_MINUTES)
     to_encode.update({
@@ -22,7 +21,7 @@ def create_access_token(data: Dict) -> str:
     return jwt.encode(to_encode, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
 
-def create_refresh_token(data: Dict) -> str:
+def create_refresh_token(data: dict) -> str:
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(days=REFRESH_EXPIRE_DAYS)
     to_encode.update({
@@ -32,10 +31,10 @@ def create_refresh_token(data: Dict) -> str:
     return jwt.encode(to_encode, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
 
-def verify_token(token: str, token_type: str) -> Optional[Dict]:
+def verify_token(token: str, expected_type: str) -> dict | None:
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-        if payload.get("type") != token_type:
+        if payload.get("type") != expected_type:
             return None
         return payload
     except JWTError:
