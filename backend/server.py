@@ -341,11 +341,6 @@ async def login_jwt(
         }
     }
 
-
-@api_router.get("/auth/me-jwt")
-async def get_me_jwt(current_user: User = Depends(get_current_user)):
-    return current_user
-
 @api_router.post("/auth/refresh")
 async def refresh_access_token(
     refresh_token: Optional[str] = Cookie(None)
