@@ -15,6 +15,7 @@ import bcrypt
 import asyncio
 import resend
 
+# JWT
 from auth.jwt_utils import (
     create_access_token,
     create_refresh_token,
@@ -33,12 +34,6 @@ try:
 except ImportError:
     EMERGENT_AVAILABLE = False
 
-# JWT
-from auth.jwt_utils import (
-    create_access_token,
-    create_refresh_token,
-    verify_token
-)
 
 # ======================= ENV =======================
 ROOT_DIR = Path(__file__).parent
