@@ -319,7 +319,7 @@ async def login_jwt(
         key="refresh_token",
         value=refresh_token,
         httponly=True,
-        secure=True,
+        secure=IS_PROD,
         samesite="none",
         max_age=REFRESH_EXPIRE_DAYS * 24 * 60 * 60,
         path="/"
@@ -418,7 +418,7 @@ async def process_session(request: Request, response: Response):
         key="session_token",
         value=session_token,
         httponly=True,
-        secure=True,
+        secure=IS_PROD,
         samesite="none",
         max_age=7*24*60*60,
         path="/"
