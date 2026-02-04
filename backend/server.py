@@ -359,8 +359,8 @@ async def refresh_access_token(
     }
 
 
-@api_router.get("/auth/me-jwt")
-async def get_me(current_user: User = Depends(get_current_user_jwt)):
+@api_router.get("/auth/me")
+async def get_me(current_user: User = Depends(get_current_user)):
     return current_user
 
 @api_router.post("/auth/logout")
