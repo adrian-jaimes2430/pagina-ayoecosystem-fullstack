@@ -428,7 +428,7 @@ async def process_session(request: Request, response: Response):
 
 # PRODUCTS
 @api_router.post("/products", response_model=Product)
-async def create_product(product_data: ProductCreate, current_user: User = Depends(get_current_user_jwt)):
+async def create_product(product_data: ProductCreate, current_user: User = Depends(get_current_user)):
     if current_user.role not in [UserRole.SUPER_ADMIN, UserRole.ADMIN_MARCA]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
@@ -469,7 +469,7 @@ async def get_product(product_id: str):
     return Product(**product)
 
 @api_router.put("/products/{product_id}")
-async def update_product(product_id: str, product_data: ProductCreate, current_user: User = Depends(get_current_user_jwt)):
+async def update_product(product_id: str, product_data: ProductCreate, current_user: User = Depends(get_current_user)):
     if current_user.role not in [UserRole.SUPER_ADMIN, UserRole.ADMIN_MARCA]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
@@ -484,7 +484,7 @@ async def update_product(product_id: str, product_data: ProductCreate, current_u
     return {"message": "Product updated successfully"}
 
 @api_router.delete("/products/{product_id}")
-async def delete_product(product_id: str, current_user: User = Depends(get_current_user_jwt)):
+async def delete_product(product_id: str, current_user: User = Depends(get_current_user)):
     if current_user.role not in [UserRole.SUPER_ADMIN, UserRole.ADMIN_MARCA]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
@@ -500,7 +500,7 @@ async def delete_product(product_id: str, current_user: User = Depends(get_curre
 
 # ORDERS
 @api_router.post("/orders", response_model=Order)
-async def create_order(order_data: OrderCreate, current_user: User = Depends(get_current_user_jwt)):
+async def create_order(order_data: OrderCreate, current_user: User = Depends(get_current_user)):
     total_amount = 0.0
     commission_amount = 0.0
     
@@ -531,7 +531,7 @@ async def create_order(order_data: OrderCreate, current_user: User = Depends(get
     return Order(**order_doc)
 
 @api_router.get("/orders", response_model=List[Order])
-async def get_orders(current_user: User = Depends(get_current_user_jwt)):
+async def get_orders(current_user: User = Depends(get_current_user)):
     query = {}
     if current_user.role == UserRole.IMPULSADOR:
         query["impulsador_id"] = current_user.user_id
@@ -546,7 +546,7 @@ async def get_orders(current_user: User = Depends(get_current_user_jwt)):
     return [Order(**o) for o in orders]
 
 @api_router.get("/orders/{order_id}", response_model=Order)
-async def get_order(order_id: str, current_user: User = Depends(get_current_user_jwt)):
+async def get_order(order_id: str, current_user: User = Depends(get_current_user)):
     order = await db.orders.find_one({"order_id": order_id}, {"_id": 0})
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
@@ -561,7 +561,7 @@ async def get_order(order_id: str, current_user: User = Depends(get_current_user
 
 # STRIPE PAYMENT
 @api_router.post("/payments/stripe/checkout")
-async def create_stripe_checkout(request: Request, current_user: User = Depends(get_current_user_jwt)):
+async def create_stripe_checkout(request: Request, current_user: User = Depends(get_current_user)):
     data = await request.json()
     order_id = data.get("order_id")
     origin_url = data.get("origin_url")
@@ -604,7 +604,7 @@ async def create_stripe_checkout(request: Request, current_user: User = Depends(
     return {"url": session.url, "session_id": session.session_id}
 
 @api_router.get("/payments/stripe/status/{session_id}")
-async def get_stripe_status(session_id: str, current_user: User = Depends(get_current_user_jwt)):
+async def get_stripe_status(session_id: str, current_user: User = Depends(get_current_user)):
     payment = await db.payment_transactions.find_one({"session_id": session_id}, {"_id": 0})
     if not payment:
         raise HTTPException(status_code=404, detail="Payment not found")
@@ -731,7 +731,7 @@ async def get_inverfact_strategies():
     return {"strategies": INVERFACT_STRATEGIES}
 
 @api_router.get("/inverfact/user/strategies")
-async def get_user_inverfact_strategies(current_user: User = Depends(get_current_user_jwt)):
+async def get_user_inverfact_strategies(current_user: User = Depends(get_current_user)):
     """Get strategies activated for the current user"""
     user_strategies = await db.inverfact_user_strategies.find(
         {"user_id": current_user.user_id, "is_active": True},
@@ -748,7 +748,7 @@ async def get_user_inverfact_strategies(current_user: User = Depends(get_current
     return {"strategies": enriched, "count": len(enriched), "has_active_strategies": len(enriched) > 0}
 
 @api_router.post("/inverfact/admin/users/{user_id}/strategies")
-async def activate_user_strategy(user_id: str, request: Request, current_user: User = Depends(get_current_user_jwt)):
+async def activate_user_strategy(user_id: str, request: Request, current_user: User = Depends(get_current_user)):
     """Admin: Activate a strategy for a user"""
     if current_user.role != UserRole.SUPER_ADMIN:
         raise HTTPException(status_code=403, detail="No autorizado")
@@ -802,7 +802,7 @@ async def activate_user_strategy(user_id: str, request: Request, current_user: U
     return {"message": "Estrategia activada exitosamente"}
 
 @api_router.delete("/inverfact/admin/users/{user_id}/strategies/{strategy_id}")
-async def deactivate_user_strategy(user_id: str, strategy_id: str, current_user: User = Depends(get_current_user_jwt)):
+async def deactivate_user_strategy(user_id: str, strategy_id: str, current_user: User = Depends(get_current_user)):
     """Admin: Deactivate a strategy for a user"""
     if current_user.role != UserRole.SUPER_ADMIN:
         raise HTTPException(status_code=403, detail="No autorizado")
@@ -818,7 +818,7 @@ async def deactivate_user_strategy(user_id: str, strategy_id: str, current_user:
     return {"message": "Estrategia desactivada exitosamente"}
 
 @api_router.get("/inverfact/admin/users-strategies")
-async def get_all_users_strategies(current_user: User = Depends(get_current_user_jwt)):
+async def get_all_users_strategies(current_user: User = Depends(get_current_user)):
     """Admin: Get all users with their strategy activations"""
     if current_user.role != UserRole.SUPER_ADMIN:
         raise HTTPException(status_code=403, detail="No autorizado")
@@ -901,7 +901,7 @@ async def create_notification(user_id: str, title: str, message: str, notificati
     return notification_doc
 
 @api_router.get("/notifications")
-async def get_notifications(current_user: User = Depends(get_current_user_jwt)):
+async def get_notifications(current_user: User = Depends(get_current_user)):
     """Get user notifications"""
     notifications = await db.notifications.find(
         {"user_id": current_user.user_id},
@@ -916,7 +916,7 @@ async def get_notifications(current_user: User = Depends(get_current_user_jwt)):
     return {"notifications": notifications, "unread_count": unread_count}
 
 @api_router.post("/notifications/{notification_id}/read")
-async def mark_notification_read(notification_id: str, current_user: User = Depends(get_current_user_jwt)):
+async def mark_notification_read(notification_id: str, current_user: User = Depends(get_current_user)):
     """Mark a notification as read"""
     result = await db.notifications.update_one(
         {"notification_id": notification_id, "user_id": current_user.user_id},
@@ -927,7 +927,7 @@ async def mark_notification_read(notification_id: str, current_user: User = Depe
     return {"message": "Notificación marcada como leída"}
 
 @api_router.post("/notifications/read-all")
-async def mark_all_notifications_read(current_user: User = Depends(get_current_user_jwt)):
+async def mark_all_notifications_read(current_user: User = Depends(get_current_user)):
     """Mark all notifications as read"""
     await db.notifications.update_many(
         {"user_id": current_user.user_id, "is_read": False},
@@ -955,7 +955,7 @@ NOMADHIVE_REWARDS = [
 ]
 
 @api_router.get("/nomadhive/profile")
-async def get_nomadhive_profile(current_user: User = Depends(get_current_user_jwt)):
+async def get_nomadhive_profile(current_user: User = Depends(get_current_user)):
     """Get impulsador profile for NomadHive"""
     profile = await db.nomadhive_profiles.find_one({"user_id": current_user.user_id}, {"_id": 0})
     
@@ -993,7 +993,7 @@ async def get_nomadhive_profile(current_user: User = Depends(get_current_user_jw
     return profile
 
 @api_router.get("/nomadhive/tasks")
-async def get_nomadhive_tasks(current_user: User = Depends(get_current_user_jwt)):
+async def get_nomadhive_tasks(current_user: User = Depends(get_current_user)):
     """Get available tasks and completion status"""
     # Get user's completed tasks
     completed = await db.nomadhive_completed_tasks.find(
@@ -1012,7 +1012,7 @@ async def get_nomadhive_tasks(current_user: User = Depends(get_current_user_jwt)
     return {"tasks": tasks, "completed_count": len(completed_ids), "total_count": len(NOMADHIVE_TASKS)}
 
 @api_router.post("/nomadhive/tasks/{task_id}/complete")
-async def complete_nomadhive_task(task_id: str, current_user: User = Depends(get_current_user_jwt)):
+async def complete_nomadhive_task(task_id: str, current_user: User = Depends(get_current_user)):
     """Mark a task as completed and award points"""
     # Validate task exists
     task = next((t for t in NOMADHIVE_TASKS if t["task_id"] == task_id), None)
@@ -1103,7 +1103,7 @@ async def complete_nomadhive_task(task_id: str, current_user: User = Depends(get
     return {"message": f"¡Tarea completada! +{task['points_reward']} puntos", "points_earned": task["points_reward"], "new_level": new_level if new_level != current_level else None}
 
 @api_router.get("/nomadhive/rewards")
-async def get_nomadhive_rewards(current_user: User = Depends(get_current_user_jwt)):
+async def get_nomadhive_rewards(current_user: User = Depends(get_current_user)):
     """Get available rewards for redemption"""
     profile = await db.nomadhive_profiles.find_one({"user_id": current_user.user_id}, {"_id": 0})
     current_points = profile.get("total_points", 0) if profile else 0
@@ -1117,7 +1117,7 @@ async def get_nomadhive_rewards(current_user: User = Depends(get_current_user_jw
     return {"rewards": rewards, "current_points": current_points}
 
 @api_router.post("/nomadhive/rewards/{reward_id}/redeem")
-async def redeem_nomadhive_reward(reward_id: str, current_user: User = Depends(get_current_user_jwt)):
+async def redeem_nomadhive_reward(reward_id: str, current_user: User = Depends(get_current_user)):
     """Redeem a reward with points"""
     # Validate reward
     reward = next((r for r in NOMADHIVE_REWARDS if r["reward_id"] == reward_id), None)
@@ -1163,7 +1163,7 @@ async def redeem_nomadhive_reward(reward_id: str, current_user: User = Depends(g
     return {"message": f"¡Recompensa canjeada! Tu solicitud está siendo procesada.", "redemption_id": redemption_doc["redemption_id"]}
 
 @api_router.get("/nomadhive/orders")
-async def get_nomadhive_orders(current_user: User = Depends(get_current_user_jwt)):
+async def get_nomadhive_orders(current_user: User = Depends(get_current_user)):
     """Get orders for the impulsador"""
     orders = await db.orders.find(
         {"impulsador_id": current_user.user_id},
@@ -1177,7 +1177,7 @@ async def get_nomadhive_orders(current_user: User = Depends(get_current_user_jwt
     return {"orders": orders, "count": len(orders)}
 
 @api_router.get("/nomadhive/referrals")
-async def get_nomadhive_referrals(current_user: User = Depends(get_current_user_jwt)):
+async def get_nomadhive_referrals(current_user: User = Depends(get_current_user)):
     """Get referrals for the impulsador"""
     profile = await db.nomadhive_profiles.find_one({"user_id": current_user.user_id}, {"_id": 0})
     referral_code = profile.get("referral_code") if profile else None
@@ -1202,7 +1202,7 @@ async def get_nomadhive_leaderboard():
 
 # USERS MANAGEMENT
 @api_router.get("/users", response_model=List[User])
-async def get_users(current_user: User = Depends(get_current_user_jwt)):
+async def get_users(current_user: User = Depends(get_current_user)):
     if current_user.role not in [UserRole.SUPER_ADMIN, UserRole.ADMIN_MARCA]:
         raise HTTPException(status_code=403, detail="Not authorized")
     
@@ -1214,7 +1214,7 @@ async def get_users(current_user: User = Depends(get_current_user_jwt)):
     return [User(**u) for u in users]
 
 @api_router.put("/users/{user_id}/role")
-async def update_user_role(user_id: str, role_data: dict, current_user: User = Depends(get_current_user_jwt)):
+async def update_user_role(user_id: str, role_data: dict, current_user: User = Depends(get_current_user)):
     if current_user.role != UserRole.SUPER_ADMIN:
         raise HTTPException(status_code=403, detail="Not authorized")
     
@@ -1234,7 +1234,7 @@ async def update_user_role(user_id: str, role_data: dict, current_user: User = D
 
 # COMMISSIONS
 @api_router.get("/commissions")
-async def get_commissions(current_user: User = Depends(get_current_user_jwt)):
+async def get_commissions(current_user: User = Depends(get_current_user)):
     if current_user.role == UserRole.IMPULSADOR:
         orders = await db.orders.find({"impulsador_id": current_user.user_id, "payment_status": "paid"}, {"_id": 0}).to_list(1000)
     elif current_user.role in [UserRole.SUPER_ADMIN, UserRole.ADMIN_MARCA]:
@@ -1252,7 +1252,7 @@ async def get_commissions(current_user: User = Depends(get_current_user_jwt)):
 
 # STATS
 @api_router.get("/stats/dashboard")
-async def get_dashboard_stats(current_user: User = Depends(get_current_user_jwt)):
+async def get_dashboard_stats(current_user: User = Depends(get_current_user)):
     if current_user.role in [UserRole.SUPER_ADMIN, UserRole.ADMIN_MARCA]:
         total_products = await db.products.count_documents({"status": "active"})
         total_orders = await db.orders.count_documents({})
@@ -1292,7 +1292,7 @@ from inverpulse_models import (
 
 # INVERPULSE - Registro de inversor
 @api_router.post("/inverpulse/register")
-async def register_inverpulse_investor(request: Request, current_user: User = Depends(get_current_user_jwt)):
+async def register_inverpulse_investor(request: Request, current_user: User = Depends(get_current_user)):
     data = await request.json()
     referred_by_code = data.get("referral_code")
     
@@ -1339,7 +1339,7 @@ async def register_inverpulse_investor(request: Request, current_user: User = De
 
 # INVERPULSE - Obtener perfil del inversor
 @api_router.get("/inverpulse/profile")
-async def get_inverpulse_profile(current_user: User = Depends(get_current_user_jwt)):
+async def get_inverpulse_profile(current_user: User = Depends(get_current_user)):
     inversor = await db.inversores_inverpulse.find_one({"user_id": current_user.user_id}, {"_id": 0})
     if not inversor:
         raise HTTPException(status_code=404, detail="No estás registrado en InverPulse")
@@ -1361,7 +1361,7 @@ async def get_inverpulse_profile(current_user: User = Depends(get_current_user_j
 
 # INVERPULSE - Crear depósito
 @api_router.post("/inverpulse/deposits")
-async def create_inverpulse_deposit(request: Request, current_user: User = Depends(get_current_user_jwt)):
+async def create_inverpulse_deposit(request: Request, current_user: User = Depends(get_current_user)):
     data = await request.json()
     amount = data.get("amount")
     
@@ -1389,7 +1389,7 @@ async def create_inverpulse_deposit(request: Request, current_user: User = Depen
 
 # INVERPULSE - Confirmar depósito (ADMIN)
 @api_router.post("/inverpulse/deposits/{deposit_id}/confirm")
-async def confirm_inverpulse_deposit(deposit_id: str, request: Request, current_user: User = Depends(get_current_user_jwt)):
+async def confirm_inverpulse_deposit(deposit_id: str, request: Request, current_user: User = Depends(get_current_user)):
     if current_user.role != UserRole.SUPER_ADMIN:
         raise HTTPException(status_code=403, detail="No autorizado")
     
@@ -1430,7 +1430,7 @@ async def confirm_inverpulse_deposit(deposit_id: str, request: Request, current_
 
 # INVERPULSE - Submit KYC
 @api_router.post("/inverpulse/kyc/submit")
-async def submit_inverpulse_kyc(kyc_data: KYCRequest, current_user: User = Depends(get_current_user_jwt)):
+async def submit_inverpulse_kyc(kyc_data: KYCRequest, current_user: User = Depends(get_current_user)):
     inversor = await db.inversores_inverpulse.find_one({"user_id": current_user.user_id}, {"_id": 0})
     if not inversor:
         raise HTTPException(status_code=404, detail="No estás registrado en InverPulse")
@@ -1453,7 +1453,7 @@ async def submit_inverpulse_kyc(kyc_data: KYCRequest, current_user: User = Depen
 
 # INVERPULSE - Aprobar/Rechazar KYC (ADMIN)
 @api_router.post("/inverpulse/kyc/{inversor_id}/review")
-async def review_inverpulse_kyc(inversor_id: str, request: Request, current_user: User = Depends(get_current_user_jwt)):
+async def review_inverpulse_kyc(inversor_id: str, request: Request, current_user: User = Depends(get_current_user)):
     if current_user.role != UserRole.SUPER_ADMIN:
         raise HTTPException(status_code=403, detail="No autorizado")
     
@@ -1496,7 +1496,7 @@ async def review_inverpulse_kyc(inversor_id: str, request: Request, current_user
 
 # INVERPULSE - Crear señal de trading (ADMIN)
 @api_router.post("/inverpulse/signals")
-async def create_trading_signal(request: Request, current_user: User = Depends(get_current_user_jwt)):
+async def create_trading_signal(request: Request, current_user: User = Depends(get_current_user)):
     if current_user.role != UserRole.SUPER_ADMIN:
         raise HTTPException(status_code=403, detail="No autorizado")
     
@@ -1527,7 +1527,7 @@ async def create_trading_signal(request: Request, current_user: User = Depends(g
 
 # INVERPULSE - Obtener señales según nivel del inversor
 @api_router.get("/inverpulse/signals")
-async def get_trading_signals(current_user: User = Depends(get_current_user_jwt)):
+async def get_trading_signals(current_user: User = Depends(get_current_user)):
     inversor = await db.inversores_inverpulse.find_one({"user_id": current_user.user_id}, {"_id": 0})
     if not inversor:
         raise HTTPException(status_code=404, detail="No estás registrado en InverPulse")
@@ -1554,7 +1554,7 @@ async def get_trading_signals(current_user: User = Depends(get_current_user_jwt)
 
 # INVERPULSE - Actualizar nivel manualmente (ADMIN)
 @api_router.post("/inverpulse/investors/{inversor_id}/update-level")
-async def update_investor_level(inversor_id: str, request: Request, current_user: User = Depends(get_current_user_jwt)):
+async def update_investor_level(inversor_id: str, request: Request, current_user: User = Depends(get_current_user)):
     if current_user.role != UserRole.SUPER_ADMIN:
         raise HTTPException(status_code=403, detail="No autorizado")
     
@@ -1573,7 +1573,7 @@ async def update_investor_level(inversor_id: str, request: Request, current_user
 
 # INVERPULSE - Listar todos los inversores (ADMIN)
 @api_router.get("/inverpulse/investors")
-async def list_inverpulse_investors(current_user: User = Depends(get_current_user_jwt)):
+async def list_inverpulse_investors(current_user: User = Depends(get_current_user)):
     if current_user.role != UserRole.SUPER_ADMIN:
         raise HTTPException(status_code=403, detail="No autorizado")
     
@@ -1583,7 +1583,7 @@ async def list_inverpulse_investors(current_user: User = Depends(get_current_use
 
 # INVERPULSE - Ver depósitos pendientes (ADMIN)
 @api_router.get("/inverpulse/deposits/pending")
-async def list_pending_deposits(current_user: User = Depends(get_current_user_jwt)):
+async def list_pending_deposits(current_user: User = Depends(get_current_user)):
     if current_user.role != UserRole.SUPER_ADMIN:
         raise HTTPException(status_code=403, detail="No autorizado")
     
@@ -1599,7 +1599,7 @@ async def list_pending_deposits(current_user: User = Depends(get_current_user_jw
 
 # INVERPULSE - Ver KYC pendientes (ADMIN)
 @api_router.get("/inverpulse/kyc/pending")
-async def list_pending_kyc(current_user: User = Depends(get_current_user_jwt)):
+async def list_pending_kyc(current_user: User = Depends(get_current_user)):
     if current_user.role != UserRole.SUPER_ADMIN:
         raise HTTPException(status_code=403, detail="No autorizado")
     
