@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from '@/components/ui/sonner';
 import '@/App.css';
-
 import LandingAO from '@/pages/LandingAO';
 import LandingANMA from '@/pages/LandingANMA';
 import LandingNomadHive from '@/pages/LandingNomadHive';
