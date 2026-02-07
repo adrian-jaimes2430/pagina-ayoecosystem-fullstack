@@ -1,27 +1,16 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { BuilderComponent } from "@builder.io/react";
 import RequireAuth from "./auth/RequireAuth";
+import { BuilderComponent } from "@builder.io/react";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* =====================
-            RUTAS PÚBLICAS
-        ===================== */}
-        <Route
-          path="/"
-          element={<BuilderComponent model="page" />}
-        />
+        {/* Públicas */}
+        <Route path="/" element={<BuilderComponent model="page" />} />
+        <Route path="/login" element={<BuilderComponent model="page" />} />
 
-        <Route
-          path="/login"
-          element={<BuilderComponent model="page" />}
-        />
-
-        {/* =====================
-            RUTAS PROTEGIDAS
-        ===================== */}
+        {/* Protegidas */}
         <Route
           path="/dashboard"
           element={
