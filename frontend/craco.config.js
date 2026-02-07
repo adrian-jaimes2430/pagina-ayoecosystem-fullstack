@@ -41,8 +41,12 @@ const webpackConfig = {
       },
     },
   },
-  webpack: {
-    configure: (webpackConfig) => {
+ webpack: {
+  alias: {
+    '@': path.resolve(__dirname, 'src'),
+  },
+  configure: (webpackConfig) => {
+
       webpackConfig.watchOptions = {
         ...webpackConfig.watchOptions,
         ignored: [
