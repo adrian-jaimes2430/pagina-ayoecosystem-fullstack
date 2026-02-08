@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { Button } from '@/components/ui/button';
+import { Button } from './components/ui/button';
 import { CheckCircle, Loader } from 'lucide-react';
 import { toast } from 'sonner';
 
