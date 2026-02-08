@@ -1,4 +1,4 @@
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "./hooks/useAuth";
 
 export function AuthGuard({ children }: { children: JSX.Element }) {
   const { user, loading } = useAuth();
