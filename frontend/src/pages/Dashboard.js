@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
-import { Button } from './components/ui/button';
+import { Button } from '../components/ui/button';
 import { Package, DollarSign, ShoppingBag, LogOut, User, Users, TrendingDown, Zap } from 'lucide-react';
 import { toast } from 'sonner';
-import NotificationBell from './components/NotificationBell';
+import NotificationBell from '../components/NotificationBell';
 
 const BACKEND_URL = import.meta.env.VITE_API_URL;
 const API = `${BACKEND_URL}/api`;

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Package, TrendingUp, Truck, MessageSquare, ArrowRight, DollarSign } from 'lucide-react';
-import { Button } from './components/ui/button';
+import { Button } from '../components/ui/button';
 
 const LOGISTICS_IMAGE = "https://images.unsplash.com/photo-1768796373360-95d80c5830fb?crop=entropy&cs=srgb&fm=jpg&q=85";
 const REMOTE_AGENT = "https://images.unsplash.com/photo-1743865319740-32121cae5959?crop=entropy&cs=srgb&fm=jpg&q=85";

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Button } from './components/ui/button';
+import { Button } from '../components/ui/button';
 import { Zap, Users, TrendingUp, Shield, DollarSign, ArrowLeft, Plus, CheckCircle, Clock } from 'lucide-react';
 import { toast } from 'sonner';
 

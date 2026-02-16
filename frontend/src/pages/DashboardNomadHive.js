@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import { Button } from './components/ui/button';
+import { Button } from '../components/ui/button';
 import { toast } from 'sonner';
 import { 
   Users, ArrowLeft, Trophy, Star, Gift, ShoppingBag, Target, 

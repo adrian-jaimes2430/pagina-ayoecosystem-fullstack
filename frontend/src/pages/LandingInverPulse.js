@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { TrendingUp, Shield, Zap, Globe, ArrowRight, CheckCircle, BarChart3, Lock, Users, MessageSquare } from 'lucide-react';
-import { Button } from './components/ui/button';
+import { Button } from '../components/ui/button';
 
 const TRADING_IMAGE = "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?crop=entropy&cs=srgb&fm=jpg&q=85";
 const PLATFORM_IMAGE = "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?crop=entropy&cs=srgb&fm=jpg&q=85";

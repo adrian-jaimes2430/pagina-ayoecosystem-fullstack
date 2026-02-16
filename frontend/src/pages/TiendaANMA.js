@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Button } from './components/ui/button';
-import { Input } from './components/ui/input';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
 import { Package, ShoppingCart, MessageSquare, X } from 'lucide-react';
 import { toast } from 'sonner';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog';
 
 const BACKEND_URL = import.meta.env.VITE_API_URL;
 const API = `${BACKEND_URL}/api`;

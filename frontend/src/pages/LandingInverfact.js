@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { TrendingDown, Shield, Users, DollarSign, ArrowRight, CheckCircle, AlertTriangle, FileText, Zap } from 'lucide-react';
-import { Button } from './components/ui/button';
+import { Button } from '../components/ui/button';
 
 const FINANCE_IMAGE = "https://images.unsplash.com/photo-1579532537598-459ecdaf39cc?crop=entropy&cs=srgb&fm=jpg&q=85";
 const CHART_IMAGE = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?crop=entropy&cs=srgb&fm=jpg&q=85";

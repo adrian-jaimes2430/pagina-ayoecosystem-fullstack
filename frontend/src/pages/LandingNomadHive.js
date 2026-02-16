@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Users, TrendingUp, Award, DollarSign, ArrowRight, Target, Gift, BarChart3 } from 'lucide-react';
-import { Button } from './components/ui/button';
+import { Button } from '../components/ui/button';
 
 const REMOTE_WORK = "https://images.unsplash.com/photo-1743865319740-32121cae5959?crop=entropy&cs=srgb&fm=jpg&q=85";
 const TEAM_SUCCESS = "https://images.unsplash.com/photo-1769740333462-9a63bfa914bc?crop=entropy&cs=srgb&fm=jpg&q=85";
