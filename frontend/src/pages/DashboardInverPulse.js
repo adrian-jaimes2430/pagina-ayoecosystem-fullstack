@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Zap, Users, TrendingUp, Shield, DollarSign, ArrowLeft, Plus, CheckCircle, Clock } from 'lucide-react';
 import { toast } from 'sonner';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL = import.meta.env.VITE_API_URL;
 const API = `${BACKEND_URL}/api`;
 
 function DashboardInverPulse() {
