@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Building2, TrendingUp, Users, Shield, ArrowRight, Package, MessageSquare, TrendingDown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from './components/ui/button';
 
 const HERO_IMAGE = "https://images.unsplash.com/photo-1760124056883-732e7a5e2e68?crop=entropy&cs=srgb&fm=jpg&q=85";
 const TEAM_IMAGE = "https://images.unsplash.com/photo-1769740333462-9a63bfa914bc?crop=entropy&cs=srgb&fm=jpg&q=85";

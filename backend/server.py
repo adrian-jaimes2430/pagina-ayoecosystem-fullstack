@@ -15,6 +15,14 @@ import bcrypt
 import asyncio
 import resend
 
+# JWT
+from auth.jwt_utils import (
+    create_access_token,
+    create_refresh_token,
+    verify_token,
+    REFRESH_EXPIRE_DAYS
+)
+
 # Stripe
 try:
     from emergentintegrations.payments.stripe.checkout import (
@@ -26,12 +34,6 @@ try:
 except ImportError:
     EMERGENT_AVAILABLE = False
 
-# JWT
-from auth.jwt_utils import (
-    create_access_token,
-    create_refresh_token,
-    verify_token
-)
 
 # ======================= ENV =======================
 ROOT_DIR = Path(__file__).parent
@@ -317,7 +319,7 @@ async def login_jwt(
         key="refresh_token",
         value=refresh_token,
         httponly=True,
-        secure=True,
+        secure=IS_PROD,
         samesite="none",
         max_age=REFRESH_EXPIRE_DAYS * 24 * 60 * 60,
         path="/"
@@ -333,11 +335,6 @@ async def login_jwt(
             "role": user["role"]
         }
     }
-
-
-@api_router.get("/auth/me-jwt")
-async def get_me_jwt(current_user: User = Depends(get_current_user_jwt)):
-    return current_user
 
 @api_router.post("/auth/refresh")
 async def refresh_access_token(
@@ -421,7 +418,7 @@ async def process_session(request: Request, response: Response):
         key="session_token",
         value=session_token,
         httponly=True,
-        secure=True,
+        secure=IS_PROD,
         samesite="none",
         max_age=7*24*60*60,
         path="/"
@@ -1649,7 +1646,7 @@ async def startup_event():
             "email": "jaimesblandon.adrianfelipe@gmail.com",
             "name": "Gerencia General A&O",
             "level": InverPulseLevel.RUBI,  # Nivel máximo para admin
-            "total_deposit": 0.0,
+            "total_deposit": 2000.0,
             "total_profit": 0.0,
             "kyc_status": "approved",
             "kyc_documents": None,
