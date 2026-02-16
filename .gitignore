@@ -125,3 +125,4 @@ android-sdk/ -e
 # Environment files
 *.env
 *.env.*
+package-lock.json
