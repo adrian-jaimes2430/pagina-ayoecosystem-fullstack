@@ -1,0 +1,20 @@
+[33mf95ecc9[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m fix: add tsconfig and Builder.io dependencies
+[33m8b704dd[m fix: remove unused JS files in pages and components
+[33m0d97dec[m fix: remove duplicate index.js, use TypeScript only
+[33m04d40e2[m fix: use TypeScript entry point
+[33m865d35a[m fix: correct import paths in pages
+[33m66d01bb[m fix: recreate package.json from scratch
+[33me06a72a[m chore: force rebuild with clean package.json
+[33me860a03[m chore: force rebuild with clean package.json
+[33m6838e24[m fix: clean package.json from merge markers
+[33me20a46b[m fix: resolve merge conflict in package.json
+[33m09a01e9[m fix: migrate to Vite environment variables
+[33m23c2471[m fix: migrate to Vite environment variables
+[33mddd1be6[m Create Vercel.json
+[33m0fcb1e4[m move vite to dependencies for vercel build
+[33md0cdc65[m Delete frontend/tsconfig.json
+[33mf258727[m Delete frontend/craco.config.js
+[33m784b570[m Create index.js
+[33m372556e[m Create index.html
+[33md33f087[m Create vite.config.js
+[33m2cb753b[m Update package.json
