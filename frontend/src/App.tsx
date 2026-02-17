@@ -19,6 +19,7 @@ import Privacidad from "./pages/Privacidad";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import AuthCallback from "./pages/AuthCallback";
 import ProtectedRoute from "./components/ProtectedRoute";
+
 function App() {
   return (
     <BrowserRouter>
@@ -47,4 +48,5 @@ function App() {
     </BrowserRouter>
   );
 }
+
 export default App;
